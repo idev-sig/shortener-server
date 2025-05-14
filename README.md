@@ -56,37 +56,140 @@ goreleaser release --snapshot --clean
 just --list
 ```
 
-## 部署
-### Docker
-```yaml
----
-# https://github.com/idevsig/shortener-server
+## 文档
 
-services:
-  shortener:
-    image: ghcr.io/idevsig/shortener-server:dev-amd64
-    container_name: shortener
-    restart: unless-stopped
-    ports:
-      - ${BACKEND_PORT:-8080}:8080
-    volumes:
-      - ./data:/app/data
-      - ./config.toml:/app/config.toml
-    depends_on:
-      - valkey
+### Linux 部署
 
-  valkey:
-    image: valkey/valkey:latest
-    restart: unless-stopped
-    environment:
-      - TZ=Asia/Shanghai
+1. 下载发行版的安装包：[`deb` / `rpm`](https://github.com/idevsig/shortener-server/releases)
+2. 安装
+    ```bash
+    # deb 安装包
+    dpkg -i shortener-server_<VERSION>_linux_amd64.deb
 
-  frontend:
-    image: ghcr.io/idevsig/shortener-frontend:dev-amd64
-    restart: unless-stopped
-    ports:
-      - ${FRONTEND_PORT:-8081}:80
-```
+    # rpm 安装包
+    rpm -ivh shortener-server_<VERSION>_linux_amd64.rpm
+    ```
+3. 配置文件 `config.toml`
+4. 启动
+    ```bash
+    systemctl start shortener-server
+    systemctl enable shortener-server
+    ```
+5. 配置 Nginx 反向代理（**若使用管理界面作为入口域名，可忽略此步**）
+    <details>
+    <summary>点击展开/折叠</summary>
+
+    ```nginx
+    # 对接 API
+    location /api/ {
+        proxy_pass   http://127.0.0.1:8081/api/v1/;
+
+        client_max_body_size  1024m;
+        proxy_set_header Host $host:$server_port;
+
+        proxy_set_header X-Real-Ip $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
+        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 99999;
+    }
+    ```
+    </details>
+
+**若需要前端管理平台，需要使用 [shortener-frontend](https://github.com/idevsig/shortener-frontend/releases)** 。
+1. 下载并解压到指定目录
+2. 配置 `nginx`：
+    <details>
+    <summary>点击展开/折叠</summary>
+    
+    ```nginx
+    ...
+    listen 80;
+
+    server_name <DOMAIN>;
+
+    index index.html;
+    root /data/wwwroot/<DOMAIN>;
+
+    # 对接 API
+    location /api/ {
+        proxy_pass   http://127.0.0.1:8081/api/v1/;
+
+        client_max_body_size  1024m;
+        proxy_set_header Host $host:$server_port;
+
+        proxy_set_header X-Real-Ip $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
+        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 99999;
+    }
+    ```
+    </details>
+
+### Docker 部署
+1. 配置文件 `config.toml`
+2. 若需要使用缓存，需要配置 `valkey` 缓存
+    1. 取消 `compose.yml` 中的 `valkey` 配置的注释。
+    2. 修改配置文件 `config.toml` 中的 `cache.enabled` 字段为 `true`。
+    3. 修改配置文件 `config.toml` 中的 `cache.type` 字段为 `valkey`。
+3. 若需要 IP 数据，需要配置 `ip2region` 数据库
+    1. 下载 [ip2region.xdb](https://github.com/lionsoul2014/ip2region/blob/master/data/ip2region.xdb) ，保存至 `./data/ip2region.xdb`。
+    2. 修改配置文件 `config.toml` 中的 `geoip.enabled` 字段为 `true`。
+4. 启动
+    ```bash
+    docker compose up -d
+    ```
+5. 配置 Nginx 反向代理
+    <details>
+    <summary>点击展开/折叠</summary>
+
+    ```nginx
+    # 前端配置
+    location / {
+        proxy_pass   http://127.0.0.1:8080;
+
+        client_max_body_size  1024m;
+        proxy_set_header Host $host:$server_port;
+
+        proxy_set_header X-Real-Ip $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
+        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 99999;
+    }
+
+    # 对接 API
+    location /api/ {
+        proxy_pass   http://127.0.0.1:8081/api/v1/;
+
+        client_max_body_size  1024m;
+        proxy_set_header Host $host:$server_port;
+
+        proxy_set_header X-Real-Ip $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
+        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 99999;
+    }
+    ```
+    </details>
 
 ## TODO
 

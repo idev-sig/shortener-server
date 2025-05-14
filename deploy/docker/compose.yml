@@ -14,7 +14,7 @@ services:
       - GIN_MODE=debug
       - DATABASE_TYPE=${DATABASE_TYPE:-sqlite}
     ports:
-      - "8080:8080"
+      - "8081:8081"
     volumes:
       - ./config.toml:/app/config.toml
       - data:/app/data

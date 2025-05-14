@@ -1,7 +1,7 @@
 [server]
-address = ":8080"
+address = ":8081"
 trusted-platform = ""
-site_url = "http://localhost:8080"
+site_url = "http://localhost:8081"
 api_key = "1234567890"
 
 [shortener]

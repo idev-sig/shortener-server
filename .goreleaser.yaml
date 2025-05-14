@@ -105,9 +105,9 @@ nfpms:
       - deb
       - rpm
     file_name_template: >-
-      {{ .ProjectName }}-
-      {{- .Version }}-
-      {{- .Os }}-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
       {{- if eq .Arch "x86_64" }}amd64
       {{- else if eq .Arch "aarch64" }}arm64
       {{- else if eq .Arch "386" }}i386

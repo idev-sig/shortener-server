@@ -3,7 +3,7 @@ module go.dsig.cn/shortener
 go 1.24.1
 
 require (
-	github.com/gin-gonic/gin v1.10.0
+	github.com/gin-gonic/gin v1.10.1
 	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20250508043914-ed57fa5c5274
 	github.com/redis/go-redis/v9 v9.8.0
 	github.com/spf13/cobra v1.9.1

@@ -9,7 +9,7 @@ require (
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
 	github.com/ua-parser/uap-go v0.0.0-20250326155420-f7f5a2f9f5bc
-	github.com/valkey-io/valkey-go v1.0.59
+	github.com/valkey-io/valkey-go v1.0.60
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/driver/sqlite v1.5.7

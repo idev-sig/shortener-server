@@ -140,8 +140,8 @@ github.com/ua-parser/uap-go v0.0.0-20250326155420-f7f5a2f9f5bc h1:reH9QQKGFOq39M
 github.com/ua-parser/uap-go v0.0.0-20250326155420-f7f5a2f9f5bc/go.mod h1:gwANdYmo9R8LLwGnyDFWK2PMsaXXX2HhAvCnb/UhZsM=
 github.com/ugorji/go/codec v1.2.12 h1:9LC83zGrHhuUA9l16C9AHXAqEV/2wBQ4nkvumAE65EE=
 github.com/ugorji/go/codec v1.2.12/go.mod h1:UNopzCgEMSXjBc6AOMqYvWC1ktqTAfzJZUZgYf6w6lg=
-github.com/valkey-io/valkey-go v1.0.59 h1:W67Z0UY+Qqk3k8NKkFCFlM3X4yQUniixl7dSJAch2Qo=
-github.com/valkey-io/valkey-go v1.0.59/go.mod h1:bHmwjIEOrGq/ubOJfh5uMRs7Xj6mV3mQ/ZXUbmqpjqY=
+github.com/valkey-io/valkey-go v1.0.62 h1:oQdPlQGRyxcQWL8fnu6J3SCaQwayc/hRZifjJIaJqu0=
+github.com/valkey-io/valkey-go v1.0.62/go.mod h1:bHmwjIEOrGq/ubOJfh5uMRs7Xj6mV3mQ/ZXUbmqpjqY=
 go.uber.org/multierr v1.11.0 h1:blXXJkSxSSfBVBlC76pxqeO+LN3aDfLQo+309xJstO0=
 go.uber.org/multierr v1.11.0/go.mod h1:20+QtiLqy0Nd6FdQB9TLXag12DsQkrbs3htMFfDN80Y=
 golang.org/x/arch v0.17.0 h1:4O3dfLzd+lQewptAHqjewQZQDyEdejz3VwgeYwkZneU=

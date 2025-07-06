@@ -211,7 +211,9 @@ func (t *ShortenLogic) ShortenAll(reqQuery types.ReqQueryShorten) (int, []types.
 	}
 
 	if reqQuery.OriginalURL != "" {
-		query = query.Where("original_url = ?", reqQuery.OriginalURL)
+		// query = query.Where("original_url = ?", reqQuery.OriginalURL)
+		// 模糊查找
+		query = query.Where("original_url like ?", "%"+reqQuery.OriginalURL+"%")
 	}
 
 	if reqQuery.Status != -1 {

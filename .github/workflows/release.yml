@@ -4,10 +4,7 @@ on:
   push:
     tags:
       - "v*"
-    paths:
-      - docker-bake.hcl
-      - "deploy/docker/Dockerfile"
-      - ".github/workflows/release.yml"
+
 jobs:
   build:
     runs-on: ubuntu-latest

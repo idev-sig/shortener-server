@@ -15,7 +15,7 @@ services:
       - GIN_MODE=release
       - DATABASE_TYPE=sqlite
     ports:
-      - "8081:8081"
+      - "8080:8080"
     volumes:
       - ./config.toml:/app/config.toml
 ```
@@ -32,7 +32,7 @@ services:
       - GIN_MODE=release
       - DATABASE_TYPE=postgres
     ports:
-      - "8081:8081"
+      - "8080:8080"
     volumes:
       - ./config.toml:/app/config.toml
     depends_on:
@@ -61,7 +61,7 @@ services:
       - GIN_MODE=release
       - DATABASE_TYPE=mysql
     ports:
-      - "8081:8081"
+      - "8080:8080"
     volumes:
       - ./config.toml:/app/config.toml
     depends_on:

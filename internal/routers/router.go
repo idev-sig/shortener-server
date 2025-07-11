@@ -21,13 +21,6 @@ func NewRouter() *gin.Engine {
 	// see: https://github.com/gin-contrib/pprof
 	// pprof.Register(g)
 
-	// PING
-	g.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-
 	// favicon.ico
 	g.GET("/favicon.ico", func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -40,7 +33,16 @@ func NewRouter() *gin.Engine {
 	shortener := handlers.Handle.ShortenHandler
 	history := handlers.Handle.HistoryHandler
 
-	apiV1 := g.Group("/api/v1")
+	//apiV1 := g.Group("/api/v1")
+	apiV1 := g.Group("/api")
+
+	// PING
+	apiV1.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
+
 	apiV1.POST("/account/login", account.Login)
 	apiV1.Use(authMiddleware())
 	{

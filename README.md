@@ -82,7 +82,7 @@ just --list
     ```nginx
     # 对接 API
     location /api/ {
-        proxy_pass   http://127.0.0.1:8081/api/v1/;
+        proxy_pass   http://127.0.0.1:8080/api/;
 
         client_max_body_size  1024m;
         proxy_set_header Host $host:$server_port;
@@ -117,7 +117,7 @@ just --list
 
     # 对接 API
     location /api/ {
-        proxy_pass   http://127.0.0.1:8081/api/v1/;
+        proxy_pass   http://127.0.0.1:8080/api/;
 
         client_max_body_size  1024m;
         proxy_set_header Host $host:$server_port;
@@ -173,7 +173,7 @@ just --list
 
     # 对接 API
     location /api/ {
-        proxy_pass   http://127.0.0.1:8081/api/v1/;
+        proxy_pass   http://127.0.0.1:8080/api/;
 
         client_max_body_size  1024m;
         proxy_set_header Host $host:$server_port;

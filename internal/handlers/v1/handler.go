@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"go.dsig.cn/shortener/internal/ecodes"
-	"go.dsig.cn/shortener/internal/types"
-	"go.dsig.cn/shortener/internal/utils"
+	"go.bdev.cn/shortener/internal/ecodes"
+	"go.bdev.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/utils"
 )
 
 type handler struct{}

@@ -38,7 +38,7 @@ Content-Type: {{contentType}}
 X-API-KEY: {{apiKey}}
 
 {
-  "original_url": "https://go.dsig.cn/shortener",
+  "original_url": "https://go.bdev.cn/shortener",
   "code": "{{code}}{{$randomInt 5 200}}",
   "describe": "短网址"
 }
@@ -50,7 +50,7 @@ Content-Type: {{contentType}}
 X-API-KEY: {{apiKey}}
 
 {
-  "original_url": "https://go.dsig.cn/shortener",
+  "original_url": "https://go.bdev.cn/shortener",
   "code": "{{code}}{{$randomInt 5 100}}",
   "describe": "短网址"
 }
@@ -61,7 +61,7 @@ Content-Type: {{contentType}}
 X-API-KEY: {{apiKey}}
 
 {
-  "original_url": "https://go.dsig.cn/shortener",
+  "original_url": "https://go.bdev.cn/shortener",
   "code": "{{code}}",
   "describe": "短网址"
 }
@@ -85,7 +85,7 @@ Content-Type: {{contentType}}
 X-API-KEY: {{apiKey}}
 
 {
-  "original_url": "https://go.dsig.cn/{{code}}{{$randomInt 5 100}}",
+  "original_url": "https://go.bdev.cn/{{code}}{{$randomInt 5 100}}",
   "describe": "短网址{{$randomInt 5 100}}"
 }
 
@@ -96,7 +96,7 @@ Content-Type: {{contentType}}
 X-API-KEY: {{apiKey}}
 
 {
-  "original_url": "https://go.dsig.cn/{{code}}{{$randomInt 5 100}}",
+  "original_url": "https://go.bdev.cn/{{code}}{{$randomInt 5 100}}",
   "describe": "短网址{{$randomInt 5 100}}"
 }
 

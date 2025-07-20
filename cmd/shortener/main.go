@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/viper"
 	"resty.dev/v3"
 
-	"go.dsig.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/types"
 )
 
 // Config 配置
@@ -48,7 +48,7 @@ const (
 var (
 	cfg           Config
 	configDir     string
-	APIRequestURL = "/api/v1"
+	APIRequestURL = "/api"
 	APIShortenURL = "/shortens"
 	rootCmd       = &cobra.Command{
 		Use:           appName,

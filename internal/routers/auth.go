@@ -3,8 +3,8 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 
-	"go.dsig.cn/shortener/internal/middlewares"
-	"go.dsig.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/middlewares"
+	"go.bdev.cn/shortener/internal/shared"
 )
 
 func authMiddleware() gin.HandlerFunc {

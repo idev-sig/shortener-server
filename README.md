@@ -7,7 +7,7 @@
 
 ## 命令行
 ```bash
-go install go.dsig.cn/shortener/cmd/shortener@latest
+go install go.bdev.cn/shortener/cmd/shortener@latest
 ```
 
 ## [Docker](./deploy/docker/README.md)
@@ -60,6 +60,31 @@ just --list
 
 ### Linux 部署
 
+- 配置 Nginx 反向代理（**若使用管理界面作为入口域名，可忽略此步**）
+    <details>
+    <summary>点击展开/折叠</summary>
+
+    ```nginx
+    # 对接 API
+    location /api/ {
+        proxy_pass   http://127.0.0.1:8080/api/;
+
+        client_max_body_size  1024m;
+        proxy_set_header Host $host:$server_port;
+
+        proxy_set_header X-Real-Ip $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
+        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 99999;
+    }
+    ```
+    </details>
+
 1. 下载发行版的安装包：[`deb` / `rpm`](https://github.com/idevsig/shortener-server/releases)
 2. 安装
     ```bash
@@ -75,65 +100,9 @@ just --list
     systemctl start shortener-server
     systemctl enable shortener-server
     ```
-5. 配置 Nginx 反向代理（**若使用管理界面作为入口域名，可忽略此步**）
-    <details>
-    <summary>点击展开/折叠</summary>
-
-    ```nginx
-    # 对接 API
-    location /api/ {
-        proxy_pass   http://127.0.0.1:8080/api/;
-
-        client_max_body_size  1024m;
-        proxy_set_header Host $host:$server_port;
-
-        proxy_set_header X-Real-Ip $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
-        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
-
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_connect_timeout 99999;
-    }
-    ```
-    </details>
 
 **若需要前端管理平台，需要使用 [shortener-frontend](https://github.com/idevsig/shortener-frontend/releases)** 。
 1. 下载并解压到指定目录
-2. 配置 `nginx`：
-    <details>
-    <summary>点击展开/折叠</summary>
-    
-    ```nginx
-    ...
-    listen 80;
-
-    server_name <DOMAIN>;
-
-    index index.html;
-    root /data/wwwroot/<DOMAIN>;
-
-    # 对接 API
-    location /api/ {
-        proxy_pass   http://127.0.0.1:8080/api/;
-
-        client_max_body_size  1024m;
-        proxy_set_header Host $host:$server_port;
-
-        proxy_set_header X-Real-Ip $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
-        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
-
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_connect_timeout 99999;
-    }
-    ```
-    </details>
 
 ### Docker 部署
 1. 配置文件 `config.toml`
@@ -170,25 +139,6 @@ just --list
         proxy_set_header Connection "upgrade";
         proxy_connect_timeout 99999;
     }
-
-    # 对接 API
-    location /api/ {
-        proxy_pass   http://127.0.0.1:8080/api/;
-
-        client_max_body_size  1024m;
-        proxy_set_header Host $host:$server_port;
-
-        proxy_set_header X-Real-Ip $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;  # 透传 HTTPS 协议标识
-        proxy_set_header X-Forwarded-Ssl on;         # 明确 SSL 启用状态
-
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_connect_timeout 99999;
-    }
-    ```
     </details>
 
 ## TODO

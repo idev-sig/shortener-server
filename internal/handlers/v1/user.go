@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.dsig.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/shared"
 )
 
 // UserHandler 用户处理器

@@ -100,7 +100,7 @@ test-ci:
 # 格式化代码
 fmt:
 	gofumpt -w ./
-	goimports -w  -local go.dsig.cn/shortener ./
+	goimports -w  -local go.bdev.cn/shortener ./
 
 # 检查代码
 lint:

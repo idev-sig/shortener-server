@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	v1 "go.dsig.cn/shortener/internal/handlers/v1"
+	v1 "go.bdev.cn/shortener/internal/handlers/v1"
 )
 
 // Handler is the handler struct

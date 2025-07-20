@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"go.dsig.cn/shortener/internal/ecodes"
+	"go.bdev.cn/shortener/internal/ecodes"
 )
 
 // 缓存项结构

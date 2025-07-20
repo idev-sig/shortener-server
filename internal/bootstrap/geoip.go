@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/viper"
 
-	"go.dsig.cn/shortener/internal/pkgs/geoip"
-	"go.dsig.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/pkgs/geoip"
+	"go.bdev.cn/shortener/internal/shared"
 )
 
 // initGeoIP 初始化IP地址库

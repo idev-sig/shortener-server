@@ -3,7 +3,7 @@ package cache
 import (
 	"time"
 
-	"go.dsig.cn/shortener/internal/ecodes"
+	"go.bdev.cn/shortener/internal/ecodes"
 )
 
 // Cache 缓存

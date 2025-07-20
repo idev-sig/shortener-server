@@ -8,7 +8,7 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/valkey-io/valkey-go"
 
-	"go.dsig.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/types"
 )
 
 // ValkeyCache 缓存

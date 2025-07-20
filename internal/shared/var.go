@@ -5,9 +5,9 @@ import (
 
 	"gorm.io/gorm"
 
-	"go.dsig.cn/shortener/internal/cache"
-	"go.dsig.cn/shortener/internal/pkgs/geoip"
-	"go.dsig.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/cache"
+	"go.bdev.cn/shortener/internal/pkgs/geoip"
+	"go.bdev.cn/shortener/internal/types"
 )
 
 var (

@@ -13,9 +13,9 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"go.dsig.cn/shortener/internal/dal/db/model"
-	"go.dsig.cn/shortener/internal/shared"
-	"go.dsig.cn/shortener/internal/utils"
+	"go.bdev.cn/shortener/internal/dal/db/model"
+	"go.bdev.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/utils"
 )
 
 // initDB 初始化数据库

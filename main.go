@@ -4,12 +4,12 @@ import (
 	_ "embed"
 	"fmt"
 
-	_ "go.dsig.cn/shortener/internal/bootstrap"
-	"go.dsig.cn/shortener/internal/shared"
+	_ "go.bdev.cn/shortener/internal/bootstrap"
+	"go.bdev.cn/shortener/internal/shared"
 
 	"github.com/spf13/viper"
 
-	"go.dsig.cn/shortener/internal/routers"
+	"go.bdev.cn/shortener/internal/routers"
 )
 
 //go:embed version.txt

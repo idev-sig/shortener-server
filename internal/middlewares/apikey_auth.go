@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.dsig.cn/shortener/internal/ecodes"
-	"go.dsig.cn/shortener/internal/shared"
-	"go.dsig.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/ecodes"
+	"go.bdev.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/types"
 )
 
 // ApiKeyAuth 检查请求头中的 API Key

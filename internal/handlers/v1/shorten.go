@@ -6,11 +6,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.dsig.cn/shortener/internal/ecodes"
-	"go.dsig.cn/shortener/internal/logics"
-	"go.dsig.cn/shortener/internal/shared"
-	"go.dsig.cn/shortener/internal/types"
-	"go.dsig.cn/shortener/internal/utils"
+	"go.bdev.cn/shortener/internal/ecodes"
+	"go.bdev.cn/shortener/internal/logics"
+	"go.bdev.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/utils"
 )
 
 // ShortenHandler 短链接处理器

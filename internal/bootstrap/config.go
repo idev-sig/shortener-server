@@ -5,9 +5,9 @@ import (
 
 	"github.com/spf13/viper"
 
-	"go.dsig.cn/shortener/internal/shared"
-	"go.dsig.cn/shortener/internal/types"
-	"go.dsig.cn/shortener/internal/utils"
+	"go.bdev.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/utils"
 )
 
 // initSharedConfig 初始化共享配置

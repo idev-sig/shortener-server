@@ -4,10 +4,10 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/spf13/viper"
 
-	"go.dsig.cn/shortener/internal/cache"
-	"go.dsig.cn/shortener/internal/dal/db/model"
-	"go.dsig.cn/shortener/internal/shared"
-	"go.dsig.cn/shortener/internal/types"
+	"go.bdev.cn/shortener/internal/cache"
+	"go.bdev.cn/shortener/internal/dal/db/model"
+	"go.bdev.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/types"
 )
 
 var cacheCfg *types.CfgCache

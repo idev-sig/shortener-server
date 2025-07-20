@@ -3,8 +3,8 @@ package logics
 import (
 	"errors"
 
-	"go.dsig.cn/shortener/internal/shared"
-	"go.dsig.cn/shortener/internal/utils"
+	"go.bdev.cn/shortener/internal/shared"
+	"go.bdev.cn/shortener/internal/utils"
 )
 
 // AccountLogic 账号处理逻辑

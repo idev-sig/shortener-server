@@ -18,9 +18,9 @@ shortener init --key KEY --url "http://127.0.0.1:8080"
 创建配置文件 `$HOME/.config/shortener/config.toml`
 ```toml
 # 密钥
-key = ''
+key = ""
 # 短网址服务器
-url = 'http://127.0.0.1:8080'
+url = "http://127.0.0.1:8080"
 ```
 亦可通过全局变量设置
 ```bash

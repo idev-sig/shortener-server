@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - dev*
+    paths:
+      - "deploy/docker/Dockerfile"
+      - ".github/workflows/docker-dev.yml"
+      - "internal/**"
+      - "go.mod"
+      - "go.sum"
+      - "justfile"
 
 env:
   package_name: shortener-server
@@ -85,7 +92,7 @@ jobs:
             --amend ${{ env.GHCR_SLUG }}:dev-amd64 \
             --amend ${{ env.GHCR_SLUG }}:dev-arm64
           docker manifest push ${{ env.GHCR_SLUG }}:dev
-        shell: bash        
+        shell: bash
 
       - uses: actions/delete-package-versions@v5
         continue-on-error: true
@@ -93,4 +100,4 @@ jobs:
           package-name: ${{ env.package_name }}
           package-type: 'container'
           min-versions-to-keep: 2
-          delete-only-untagged-versions: 'true'    
+          delete-only-untagged-versions: 'true'

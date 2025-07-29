@@ -9,7 +9,6 @@ on:
       - "deploy/docker/Dockerfile"
       - ".github/workflows/docker-main.yml"
       - "internal/**"
-      - "cmd/**"
       - "go.mod"
       - "go.sum"
       - "justfile"

@@ -16,6 +16,7 @@ limitations under the License.
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -42,7 +43,7 @@ const (
 	configName = "config"
 	configType = "toml"
 	cfgDirName = "shortener"
-	version    = "0.2.0"
+	version    = "0.2.1"
 )
 
 var (
@@ -60,13 +61,13 @@ var (
 				return err
 			}
 
-			if requiresAPIURL(cmd) {
-				if cfg.APIURL == "" {
-					return fmt.Errorf(`必须提供API地址，可用方式：
-1. 命令行参数: --url
-2. 环境变量: export SHORTENER_URL=your_url
-3. 配置文件: 在 ~/.shortener/config.toml 添加 url`)
-				}
+			if !isURL(APIRequestURL) {
+				return errors.New(`
+  必须提供API地址，可用方式：
+    1. 命令行参数: --url
+    2. 环境变量: export SHORTENER_URL=your_url
+    3. 配置文件: 在 ~/.shortener/config.toml 添加 url
+	`)
 			}
 
 			return nil
@@ -122,25 +123,6 @@ func initConfig() error {
 
 	// log.Printf("cfg: %+v", cfg)
 	return nil
-}
-
-// requiresAPIURL 判断命令是否需要API地址
-func requiresAPIURL(cmd *cobra.Command) bool {
-	requiredCmds := map[string]bool{
-		"create": true,
-		"delete": true,
-		"update": true,
-		"get":    true,
-	}
-
-	current := cmd
-	for current != nil {
-		if requiredCmds[current.Name()] {
-			return true
-		}
-		current = current.Parent()
-	}
-	return false
 }
 
 // IsURL 判断是否为URL
@@ -444,10 +426,7 @@ func newShortenListCmd() *cobra.Command {
 		Short:   "List all short links",
 		Example: `  shortener list`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			var isAll bool
-			if len(args) > 0 && args[0] == "all" {
-				isAll = true
-			}
+			isAll, _ := cmd.Flags().GetBool("all")
 
 			client := resty.New()
 			defer client.Close()
@@ -509,6 +488,10 @@ func newShortenListCmd() *cobra.Command {
 				sortBy, _ := cmd.Flags().GetString("sort")
 				order, _ := cmd.Flags().GetString("order")
 
+				// 搜索
+				code, _ := cmd.Flags().GetString("code")
+				originalURL, _ := cmd.Flags().GetString("original_url")
+
 				// 设置默认值
 				if page == 0 {
 					page = 1
@@ -528,6 +511,13 @@ func newShortenListCmd() *cobra.Command {
 				query.Set("page_size", strconv.FormatInt(pageSize, 10))
 				query.Set("sort_by", sortBy)
 				query.Set("order", order)
+
+				if code != "" {
+					query.Set("code", code)
+				}
+				if originalURL != "" {
+					query.Set("original_url", originalURL)
+				}
 
 				res, err := client.R().
 					SetHeader("X-API-KEY", cfg.APIKEY).
@@ -575,16 +565,19 @@ func newShortenListCmd() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolP("all", "a", false, "List all short links")
+
 	cmd.Flags().Int64P("page", "p", 1, "Page number")
 	cmd.Flags().Int64P("psize", "z", 10, "Page size")
 	cmd.Flags().StringP("sort", "s", "created_at", "Sort by field")
 	cmd.Flags().StringP("order", "o", "asc", "Sort order")
 
+	cmd.Flags().StringP("code", "c", "", "Short code")
+	cmd.Flags().StringP("original_url", "r", "", "Original URL")
+
 	return cmd
 }
 
 func main() {
-	if err := rootCmd.Execute(); err != nil {
-		os.Exit(0)
-	}
+	rootCmd.Execute()
 }

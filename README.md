@@ -2,8 +2,8 @@
 
 一个超简单的短网址管理平台。
 
-**配置前端：[shortener-frontend](https://git.jetsung.com/idev/shortener-frontend)**   
-**命令行工具：[shortener](./cmd/shortener/README.md)**   
+**配置前端：[shortener-frontend](https://git.jetsung.com/idev/shortener-frontend)**
+**命令行工具：[shortener](./cmd/shortener/README.md)**
 
 ## 命令行
 ```bash
@@ -17,7 +17,7 @@ go install go.bdev.cn/shortener/cmd/shortener@latest
 | Registry                                                                                   | Image                                                  |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
 | [**Docker Hub**](https://hub.docker.com/r/idevsig/shortener-server/)                                | `idevsig/shortener-server`                                    |
-| [**GitHub Container Registry**](https://github.com/idevsig/shortener-server/pkgs/container/shortener-server) | `ghcr.io/idevsig/shortener-server`                            |
+| [**GitHub Container Registry**](https://github.com/idev-sig/shortener-server/pkgs/container/shortener-server) | `ghcr.io/idevsig/shortener-server`                            |
 | **Tencent Cloud Container Registry**                                                       | `ccr.ccs.tencentyun.com/idevsig/shortener-server`             |
 | **Aliyun Container Registry**                                                              | `registry.cn-guangzhou.aliyuncs.com/idevsig/shortener-server` |
 
@@ -85,7 +85,7 @@ just --list
     ```
     </details>
 
-1. 下载发行版的安装包：[`deb` / `rpm`](https://github.com/idevsig/shortener-server/releases)
+1. 下载发行版的安装包：[`deb` / `rpm`](https://github.com/idev-sig/shortener-server/releases)
 2. 安装
     ```bash
     # deb 安装包
@@ -101,7 +101,7 @@ just --list
     systemctl enable shortener-server
     ```
 
-**若需要前端管理平台，需要使用 [shortener-frontend](https://github.com/idevsig/shortener-frontend/releases)** 。
+**若需要前端管理平台，需要使用 [shortener-frontend](https://github.com/idev-sig/shortener-frontend/releases)** 。
 1. 下载并解压到指定目录
 
 ### Docker 部署
@@ -166,4 +166,4 @@ just --list
 - https://git.jetsung.com/idev/shortener-server
 - https://framagit.org/idev/shortener-server
 - https://gitcode.com/idev/shortener-server
-- https://github.com/idevsig/shortener-server
+- https://github.com/idev-sig/shortener-server

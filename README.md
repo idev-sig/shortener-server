@@ -17,7 +17,7 @@ go install go.bdev.cn/shortener/cmd/shortener@latest
 | Registry                                                                                   | Image                                                  |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
 | [**Docker Hub**](https://hub.docker.com/r/idevsig/shortener-server/)                                | `idevsig/shortener-server`                                    |
-| [**GitHub Container Registry**](https://github.com/idev-sig/shortener-server/pkgs/container/shortener-server) | `ghcr.io/idevsig/shortener-server`                            |
+| [**GitHub Container Registry**](https://github.com/idev-sig/shortener-server/pkgs/container/shortener-server) | `ghcr.io/idev-sig/shortener-server`                            |
 | **Tencent Cloud Container Registry**                                                       | `ccr.ccs.tencentyun.com/idevsig/shortener-server`             |
 | **Aliyun Container Registry**                                                              | `registry.cn-guangzhou.aliyuncs.com/idevsig/shortener-server` |
 

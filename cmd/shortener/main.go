@@ -579,5 +579,7 @@ func newShortenListCmd() *cobra.Command {
 }
 
 func main() {
-	rootCmd.Execute()
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(0)
+	}
 }

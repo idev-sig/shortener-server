@@ -33,7 +33,7 @@ func NewRouter() *gin.Engine {
 	shortener := handlers.Handle.ShortenHandler
 	history := handlers.Handle.HistoryHandler
 
-	//apiV1 := g.Group("/api/v1")
+	// apiV1 := g.Group("/api/v1")
 	apiV1 := g.Group("/api")
 
 	// PING

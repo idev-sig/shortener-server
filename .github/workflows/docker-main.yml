@@ -22,7 +22,7 @@ env:
   tcr_registry: ccr.ccs.tencentyun.com
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code

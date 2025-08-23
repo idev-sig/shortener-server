@@ -43,7 +43,7 @@ const (
 	configName = "config"
 	configType = "toml"
 	cfgDirName = "shortener"
-	version    = "0.2.1"
+	version    = "0.2.2"
 )
 
 var (
@@ -60,16 +60,6 @@ var (
 			if err := initConfig(); err != nil {
 				return err
 			}
-
-			if !isURL(APIRequestURL) {
-				return errors.New(`
-  必须提供API地址，可用方式：
-    1. 命令行参数: --url
-    2. 环境变量: export SHORTENER_URL=your_url
-    3. 配置文件: 在 ~/.shortener/config.toml 添加 url
-	`)
-			}
-
 			return nil
 		},
 	}
@@ -118,16 +108,31 @@ func initConfig() error {
 		return fmt.Errorf("failed to unmarshal config: %w", err)
 	}
 
+	if cfg.APIKEY == "" {
+		return nil
+	}
+
 	APIRequestURL = cfg.APIURL + APIRequestURL
 	APIShortenURL = APIRequestURL + APIShortenURL
 
-	// log.Printf("cfg: %+v", cfg)
 	return nil
 }
 
 // IsURL 判断是否为URL
 func isURL(url string) bool {
 	return strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://")
+}
+
+func checkConfig() error {
+	if !isURL(APIRequestURL) {
+		return errors.New(`
+  必须提供API地址，可用方式：
+    1. 命令行参数: --url
+    2. 环境变量: export SHORTENER_URL=your_url
+    3. 配置文件: 在 ~/.shortener/config.toml 添加 url
+	`)
+	}
+	return nil
 }
 
 func newInitCmd() *cobra.Command {
@@ -155,6 +160,8 @@ func newInitCmd() *cobra.Command {
 				fmt.Printf("Write config failed: %s\n%v\n", configFile, err)
 				return
 			}
+
+			fmt.Printf("Config file created: %s\n", configFile)
 		},
 	}
 }
@@ -192,6 +199,9 @@ func newShortenCreateCmd() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Example: `  shortener create https://example.com/long/url
   shortener create https://example.com --code CUSTOM_CODE --desc "My special link"`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return checkConfig()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return fmt.Errorf("origin URL is required")
@@ -264,6 +274,9 @@ func newShortenDeleteCmd() *cobra.Command {
 		Short:   "Delete a short code",
 		Args:    cobra.ExactArgs(1),
 		Example: `  shortener delete MySpecialCode`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return checkConfig()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return fmt.Errorf("short code is required")
@@ -305,6 +318,9 @@ func newShortenUpdateCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Example: `  shortener update MySpecialCode --ourl https://example.com
   shortener update MySpecialCode --ourl https://example.com --desc "My special link"`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return checkConfig()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return fmt.Errorf("short code is required")
@@ -376,6 +392,9 @@ func newShortenGetCmd() *cobra.Command {
 		Short:   "Get a short link",
 		Args:    cobra.ExactArgs(1),
 		Example: `  shortener get MySpecialCode`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return checkConfig()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return fmt.Errorf("short code is required")
@@ -425,6 +444,9 @@ func newShortenListCmd() *cobra.Command {
 		Aliases: []string{"l"},
 		Short:   "List all short links",
 		Example: `  shortener list`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return checkConfig()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			isAll, _ := cmd.Flags().GetBool("all")
 

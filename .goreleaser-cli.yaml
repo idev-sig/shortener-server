@@ -5,6 +5,10 @@ version: 2
 
 project_name: shortener
 
+git:
+  tag_sort: -version:refname
+  prerelease_suffix: "-"
+
 before:
   hooks:
     - go mod tidy
@@ -29,11 +33,6 @@ builds:
     ldflags:
       - '-s -w'
       - '-X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}'
-    ignore:
-      - goos: windows
-        goarch: loong64
-      - goos: windows
-        goarch: riscv64
 
 archives:
   - id: "shortener-cli-archive"

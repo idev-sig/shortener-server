@@ -3,25 +3,33 @@ name: Docker-Release
 on:
   push:
     tags:
-      - "*"
+      - "v*"
+  # release:
+  #     types: [created]  
 
 env:
   branch: latest
   image_org: idevsig
-  package_name: shortener-server
   acr_registry: registry.cn-guangzhou.aliyuncs.com
   hcr_registry: swr.ap-southeast-3.myhuaweicloud.com
-  tcr_registry: ccr.ccs.tencentyun.com
+  tcr_registry: sgccr.ccs.tencentyun.com
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       tag: ${{ steps.set_tag.outputs.tag }}
-      repo: ${{ steps.set_repo.outputs.repo }}
+      package_name: ${{ steps.get_package_name.outputs.package_name }}
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
+
+      - name: Set package name
+        id: get_package_name
+        run: |
+          PACKAGE_NAME="$(basename ${{ github.repository }})"
+          echo "package_name=$PACKAGE_NAME" >> $GITHUB_ENV
+          echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT        
 
       - name: Set tag without 'v' prefix
         id: set_tag
@@ -31,12 +39,6 @@ jobs:
             echo "Detected tag: $ref_tag"
             echo "tag=$ref_tag" >> $GITHUB_ENV
             echo "tag=$ref_tag" >> $GITHUB_OUTPUT
-      - name: Set repo
-        id: set_repo
-        run: |
-          IMAGE_REPO="${{ env.image_org }}/${{ env.package_name }}"
-          echo "repo=${{ env.IMAGE_REPO }}" >> $GITHUB_OUTPUT
-          echo "repo=${{ env.IMAGE_REPO }}" >> $GITHUB_ENV
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -54,14 +56,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: |
-            ${{ env.repo || '' }}
+          images: ${{ env.package_name }}
           labels: |
-            org.opencontainers.image.title=Shortener
-            org.opencontainers.image.description=Shortener is a URL shortening service.
+            org.opencontainers.image.title=${{ env.package_name }}
             org.opencontainers.image.vendor=Jetsung Chan
-          tags: |
-            ${{ env.tag }}
+          tags: 
             latest
 
       - name: Build with Bake
@@ -71,7 +70,44 @@ jobs:
             ./docker-bake.hcl
             cwd://${{ steps.meta.outputs.bake-file }}
           targets: release
-          push: ${{ github.event_name != 'pull_request' }}
+          push: false
+          set: |
+            *.output=type=oci,dest=./image.tar
+
+      - name: Upload image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: ./image.tar
+          retention-days: 1            
+
+  sync-to-docker:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y skopeo
+        skopeo --version
+    - name: Login to GitHub Container Registry (ghcr.io)
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Download image artifact
+      uses: actions/download-artifact@v5
+      with:
+        name: docker-image
+        path: .  
+    - name: Sync to Docker Hub
+      env:
+        SRC_IMAGE: oci-archive:./image.tar
+        DEST_REPO: ${{ env.image_org }}/${{ needs.build.outputs.package_name }}
+        DEST_TAG: ${{ needs.build.outputs.tag }}
+      run: |
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:$DEST_TAG
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:latest
 
   sync-to-ghcr:
     needs: build
@@ -88,18 +124,23 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Download image artifact
+      uses: actions/download-artifact@v5
+      with:
+        name: docker-image
+        path: .        
     - name: Sync to GitHub Container Registry (ghcr.io)
       env:
-        SRC_IMAGE: ${{ needs.build.outputs.repo }}:latest
-        DEST_REPO: ghcr.io/${{ github.repository_owner }}/${{ env.package_name }}
+        SRC_IMAGE: oci-archive:./image.tar
+        DEST_REPO: ghcr.io/${{ github.repository_owner }}/${{ needs.build.outputs.package_name }}
         DEST_TAG: ${{ needs.build.outputs.tag }}
       run: |
-        skopeo copy --all docker://${{ env.SRC_IMAGE }} docker://${{ env.DEST_REPO }}:${{ env.DEST_TAG }}
-        skopeo copy --all docker://${{ env.SRC_IMAGE }} docker://${{ env.DEST_REPO }}:latest
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:$DEST_TAG
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:latest
     - uses: actions/delete-package-versions@v5
       continue-on-error: true
       with:
-        package-name: ${{ env.package_name }}
+        package-name: ${{ needs.build.outputs.package_name }}
         package-type: 'container'
         min-versions-to-keep: 2
         delete-only-untagged-versions: 'true'
@@ -118,14 +159,19 @@ jobs:
         registry: ${{ env.acr_registry }}
         username: ${{ secrets.ALIYUN_USERNAME }}
         password: ${{ secrets.ALIYUN_TOKEN }}
+    - name: Download image artifact
+      uses: actions/download-artifact@v5
+      with:
+        name: docker-image
+        path: .        
     - name: Sync to Aliyun
       env:
-        SRC_IMAGE: ${{ needs.build.outputs.repo }}:latest
-        DEST_REPO: ${{ env.acr_registry }}/${{ env.image_org }}/${{ env.package_name }}
+        SRC_IMAGE: oci-archive:./image.tar
+        DEST_REPO: ${{ env.acr_registry }}/${{ env.image_org }}/${{ needs.build.outputs.package_name }}
         DEST_TAG: ${{ needs.build.outputs.tag }}
       run: |
-        skopeo copy --all docker://${{ env.SRC_IMAGE }} docker://${{ env.DEST_REPO }}:${{ env.DEST_TAG }}
-        skopeo copy --all docker://${{ env.SRC_IMAGE }} docker://${{ env.DEST_REPO }}:latest
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:$DEST_TAG
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:latest
 
   sync-to-tencent:
     needs: build
@@ -141,11 +187,17 @@ jobs:
         registry: ${{ env.tcr_registry }}
         username: ${{ secrets.TENCENT_USERNAME }}
         password: ${{ secrets.TENCENT_TOKEN }}
+    - name: Download image artifact
+      uses: actions/download-artifact@v5
+      with:
+        name: docker-image
+        path: .         
     - name: Sync to  Tencent
       env:
-        SRC_IMAGE: ${{ needs.build.outputs.repo }}:latest
-        DEST_REPO: ${{ env.tcr_registry }}/${{ env.image_org }}/${{ env.package_name }}
+        SRC_IMAGE: oci-archive:./image.tar
+        DEST_REPO: ${{ env.tcr_registry }}/${{ env.image_org }}/${{ needs.build.outputs.package_name }}
         DEST_TAG: ${{ needs.build.outputs.tag }}
       run: |
-        skopeo copy --all docker://${{ env.SRC_IMAGE }} docker://${{ env.DEST_REPO }}:${{ env.DEST_TAG }}
-        skopeo copy --all docker://${{ env.SRC_IMAGE }} docker://${{ env.DEST_REPO }}:latest
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:$DEST_TAG
+          skopeo copy --all $SRC_IMAGE docker://$DEST_REPO:latest
+          

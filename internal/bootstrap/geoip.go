@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/viper"
 
-	"go.bdev.cn/shortener/internal/pkgs/geoip"
-	"go.bdev.cn/shortener/internal/shared"
+	"go.xoder.cn/shortener/internal/pkgs/geoip"
+	"go.xoder.cn/shortener/internal/shared"
 )
 
 // initGeoIP 初始化IP地址库
@@ -32,8 +32,9 @@ func initGeoIP() {
 func ip2RegionGeoIP() *geoip.IP2Region {
 	dbPath := viper.GetString("geoip.ip2region.path")
 	loadMode := viper.GetString("geoip.ip2region.mode")
+	version := viper.GetString("geoip.ip2region.version")
 
-	ip2region, err := geoip.NewIP2Region(dbPath, loadMode)
+	ip2region, err := geoip.NewIP2Region(dbPath, loadMode, version)
 	if err != nil {
 		panic(fmt.Sprintf("failed to create ip2region: %s\n", err))
 	}

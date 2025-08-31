@@ -64,3 +64,4 @@ type = "ip2region"
 [geoip.ip2region]
 path = "data/ip2region.xdb"
 mode = "vector"
+version = "4"

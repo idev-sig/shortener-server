@@ -1,77 +1,169 @@
-# Project name derived from current directory
+# Justfile for shortener project - Multi-architecture builds
+
+# Project configuration
 project_name := `basename $(pwd)`
-
 cli_name := "shortener"
-
-# Enable cross-platform compatibility by default
-# CGO_ENABLED := "0"
-
-# GOFLAGS := "-trimpath"
-
-# 构建产物目录
 dist_dir := "dist"
 
-# 默认任务(build)
+# Build configuration
+export CGO_ENABLED := "0"
+export GOFLAGS := "-trimpath"
+
+# Version information
+version := `cat version.txt 2>/dev/null || echo "dev"`
+commit := `git rev-parse --short HEAD 2>/dev/null || echo "unknown"`
+date := `date -u +"%Y-%m-%dT%H:%M:%SZ"`
+
+# Build flags
+ldflags := "-s -w -X main.version=" + version + " -X main.commit=" + commit + " -X main.date=" + date
+
+# Supported platforms (matching goreleaser config)
+platforms := "linux/amd64 linux/arm64 linux/loong64 linux/riscv64 darwin/amd64 darwin/arm64 windows/amd64 windows/loong64 windows/riscv64"
+
+# Default target
 default: build build-cli
 
-# 构建主程序(shortener-server)
+# Build server for local platform
+[group('build')]
 build:
-    @echo "Building {{project_name}}..."
+    @echo "Building {{project_name}} for local platform..."
     @go mod tidy
     @go generate ./... || echo "No generate tasks found, continuing..."
-    @CGO_ENABLED=0 GOFLAGS="-trimpath" go build -ldflags "-s -w" -o "{{project_name}}"
+    @go build -ldflags "{{ldflags}}" -o "{{project_name}}" ./main.go
     @echo "Built {{project_name}} successfully"
 
-# 构建CLI(shortener)
+# Build CLI for local platform
+[group('build')]
 build-cli:
-    @echo "Building {{cli_name}} CLI..."
+    @echo "Building {{cli_name}} CLI for local platform..."
     @go mod tidy
     @go generate ./... || echo "No generate tasks found, continuing..."
-    @CGO_ENABLED=0 GOFLAGS="-trimpath" go build -ldflags "-s -w" -o "{{cli_name}}" ./cmd/shortener/
+    @go build -ldflags "{{ldflags}}" -o "{{cli_name}}" ./cmd/shortener/main.go
     @echo "Built {{cli_name}} successfully"
 
-# 构建快照版本(Goreleaser CLI)
-build-snapshot-cli:
-    @echo "Building {{project_name}} snapshot..."
-    @goreleaser release --snapshot --clean --config .goreleaser.cli.yaml
-    @echo "Built {{project_name}} snapshot successfully"
+# Build server for all platforms
+[unix]
+[group('build')]
+build-all-server:
+    #!/usr/bin/env -S bash -x
+    echo "Building {{project_name}} server for all platforms..."
+    mkdir -p {{dist_dir}}
+    go mod tidy
+    go generate ./... || echo "No generate tasks found, continuing..."
+    for platform in "{{platforms}}"; do
+        IFS='/' read -r goos goarch <<< "$platform"
+        echo "platform: $platform"
+        output="{{dist_dir}}/{{project_name}}-server-${goos}-${goarch}"
+        if [ "$goos" = "windows" ]; then
+            output="${output}.exe"
+        fi
+        echo "Building server for $goos/$goarch..."
+        GOOS=$goos GOARCH=$goarch go build -ldflags "{{ldflags}}" -o "$output" ./main.go
+        if [ $? -eq 0 ]; then
+            echo "✓ Built $output"
+        else
+            echo "✗ Failed to build server for $goos/$goarch"
+        fi
+    done
+    echo "All server builds completed"
 
-# 构建发布版本(Goreleaser CLI)
-build-release-cli:
-    @echo "Building {{project_name}} release..."
-    @goreleaser release --clean --config .goreleaser.cli.yaml
-    @echo "Built {{project_name}} release successfully"
+# Build CLI for all platforms
+[group('build')]
+build-all-cli:
+    #!/usr/bin/env -S bash -x
+    echo "Building {{cli_name}} CLI for all platforms..."
+    mkdir -p {{dist_dir}}
+    go mod tidy
+    go generate ./... || echo "No generate tasks found, continuing..."
+    for platform in {{platforms}}; do
+        IFS='/' read -r goos goarch <<< "$platform"
+        output="{{dist_dir}}/{{cli_name}}-${goos}-${goarch}"
+        if [ "$goos" = "windows" ]; then
+            output="${output}.exe"
+        fi
+        echo "Building CLI for $goos/$goarch..."
+        GOOS=$goos GOARCH=$goarch go build -ldflags "{{ldflags}}" -o "$output" ./cmd/shortener/main.go
+        if [ $? -eq 0 ]; then
+            echo "✓ Built $output"
+        else
+            echo "✗ Failed to build CLI for $goos/$goarch"
+        fi
+    done
+    @echo "All CLI builds completed"
 
-# 构建快照版本(Goreleaser)
-build-snapshot:
-    @echo "Building {{project_name}} snapshot..."
-    @goreleaser release --snapshot --clean
-    @echo "Built {{project_name}} snapshot successfully"
+# Build all platforms for both server and CLI
+[group('build')]
+build-all: build-all-server build-all-cli
 
-# 构建发布版本(Goreleaser)
-build-release:
-    @echo "Building {{project_name}} release..."
-    @goreleaser release --clean
-    @echo "Built {{project_name}} release successfully"
+# Build for specific platform
+[group('build')]
+build-platform GOOS GOARCH:
+    #!/usr/bin/env -S bash -x
+    echo "Building for {{GOOS}}/{{GOARCH}}..."
+    mkdir -p {{dist_dir}}
+    go mod tidy
+    # Build server
+    server_output="{{dist_dir}}/{{project_name}}-server-{{GOOS}}-{{GOARCH}}"
+    if [ "{{GOOS}}" = "windows" ]; then
+        server_output="${server_output}.exe"
+    fi
+    GOOS={{GOOS}} GOARCH={{GOARCH}} go build -ldflags "{{ldflags}}" -o "$server_output" ./main.go
+    
+    # Build CLI
+    cli_output="{{dist_dir}}/{{cli_name}}-{{GOOS}}-{{GOARCH}}"
+    if [ "{{GOOS}}" = "windows" ]; then
+        cli_output="${cli_output}.exe"
+    fi
+    GOOS={{GOOS}} GOARCH={{GOARCH}} go build -ldflags "{{ldflags}}" -o "$cli_output" ./cmd/shortener/main.go
+    
+    echo "✓ Built server: $server_output"
+    echo "✓ Built CLI: $cli_output"
 
-# 准备构建产物目录
-tidy: build
-    @echo "Tidying {{project_name}}..."
-    @rm -rf "{{dist_dir}}/{{project_name}}"
-    @mkdir -p "{{dist_dir}}/{{project_name}}/data"
-    @cp "{{project_name}}" "{{dist_dir}}/{{project_name}}/"
-    @cp -f "config/config.toml" "{{dist_dir}}/{{project_name}}/config.toml" || echo "Warning: config.toml not found"
-    @cp -f "LICENSE" "{{dist_dir}}/{{project_name}}/LICENSE" || echo "Warning: LICENSE not found"
-    @cp -f "README.md" "{{dist_dir}}/{{project_name}}/README.md" || echo "Warning: README.md not found"
-    @echo "Tidied {{project_name}} successfully"
+# Package all builds
+package-all: build-all
+    #!/usr/bin/env -S bash -x
+    echo "Packaging all builds..."
+    mkdir -p {{dist_dir}}/packages
+    cd {{dist_dir}}
+    for file in {{project_name}}-server-* {{cli_name}}-*; do
+        if [ -f "$file" ]; then
+            # Extract platform info
+            if [[ "$file" == *"-server-"* ]]; then
+                platform=$(echo "$file" | sed 's/{{project_name}}-server-//' | sed 's/\.exe$//')
+                name="{{project_name}}-server-${platform}"
+            else
+                platform=$(echo "$file" | sed 's/{{cli_name}}-//' | sed 's/\.exe$//')
+                name="{{cli_name}}-${platform}"
+            fi
+            
+            # Create temp directory
+            mkdir -p "temp/$name"
+            cp "$file" "temp/$name/"
+            
+            # Copy related files
+            if [[ "$file" == *"-server-"* ]]; then
+                cp ../LICENSE "temp/$name/" 2>/dev/null || true
+                cp ../README.md "temp/$name/" 2>/dev/null || true
+                cp ../config/config.toml "temp/$name/" 2>/dev/null || true
+            else
+                cp ../LICENSE "temp/$name/" 2>/dev/null || true
+                cp ../cmd/shortener/README.md "temp/$name/" 2>/dev/null || true
+            fi
+            
+            # Package
+            if [[ "$platform" == *"windows"* ]]; then
+                (cd temp && zip -r "../packages/${name}.zip" "$name/")
+            else
+                tar -czf "packages/${name}.tar.gz" -C temp "$name"
+            fi
+            
+            echo "✓ Packaged $name"
+        fi
+    done
+    rm -rf temp
+    @echo "All packages created in {{dist_dir}}/packages/"
 
-# 打包构建产物
-package: tidy
-    @echo "Packaging {{project_name}}..."
-    @tar -czf "{{dist_dir}}/{{project_name}}.tar.gz" -C "{{dist_dir}}/{{project_name}}" .
-    @echo "Packaged {{project_name}} successfully"
-
-# 清理构建产物
+# Clean build artifacts
 clean:
     @echo "Cleaning up..."
     @rm -f "{{project_name}}"
@@ -79,47 +171,77 @@ clean:
     @rm -rf "{{dist_dir}}"
     @echo "Cleaned up successfully"
 
-# 启动服务(Docker)
+# Docker operations
 docker-start:
     @docker compose --profile valkey -f deploy/docker/compose.yml up -d
 
-# 停止服务(Docker)
 docker-stop:
     @docker compose --profile valkey -f deploy/docker/compose.yml down
 
-# 测试(启动 Docker 服务)
-test:
-    just docker-start
-    just test-ci
-    just docker-stop
+# Testing
+[group('test')]
+test: docker-start test-ci docker-stop
 
-# 测试(CI)
+[group('test')]
 test-ci:
-    @echo "test-ci"
+    @echo "Running CI tests..."
+    @go test ./... -v
 
-# 格式化代码
+# Code formatting and linting
 fmt:
-	gofumpt -w ./
-	goimports -w  -local go.bdev.cn/shortener ./
+    @gofumpt -w ./
+    @goimports -w -local go.bdev.cn/shortener ./
 
-# 检查代码
 lint:
-    golangci-lint run
+    @golangci-lint run
 
-# 整理与更新依赖
+# Dependency management
 go-mod-tidy:
-    #!/bin/bash
-    set -e
+    #!/usr/bin/env -S bash -x
     find . -type f -name 'go.mod' -exec dirname {} \; | sort | while read dir; do
-      echo "go mod tidy in $dir"
+        echo "go mod tidy in $dir"
         (cd "$dir" && \
             go get -u ./... && \
             go mod tidy)
     done
 
-# Pre-commit
+# Pre-commit checks
 pre-commit:
-    @echo "Running pre-commit..."
+    @echo "Running pre-commit checks..."
     @just go-mod-tidy
     @just fmt
     @just lint
+
+# Show supported platforms
+show-platforms:
+    #!/usr/bin/env -S bash -x
+    echo "Supported platforms:"
+    for platform in {{platforms}}; do
+        echo "  $platform"
+    done
+
+# Show version information
+show-version:
+    @echo "Version: {{version}}"
+    @echo "Commit: {{commit}}"
+    @echo "Date: {{date}}"
+
+# Help
+help:
+    @echo "Available commands:"
+    @echo "  build              - Build server for local platform"
+    @echo "  build-cli          - Build CLI for local platform"
+    @echo "  build-all          - Build both server and CLI for all platforms"
+    @echo "  build-all-server   - Build server for all platforms"
+    @echo "  build-all-cli      - Build CLI for all platforms"
+    @echo "  build-platform     - Build for specific platform (usage: just build-platform linux amd64)"
+    @echo "  package-all        - Package all builds into archives"
+    @echo "  clean              - Clean build artifacts"
+    @echo "  fmt                - Format code"
+    @echo "  lint               - Run linter"
+    @echo "  test               - Run tests with Docker"
+    @echo "  docker-start       - Start Docker services"
+    @echo "  docker-stop        - Stop Docker services"
+    @echo "  show-platforms     - Show supported platforms"
+    @echo "  show-version       - Show version information"
+    @echo "  help               - Show this help message"

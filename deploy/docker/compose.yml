@@ -3,9 +3,6 @@ services:
     build:
       context: ../../
       dockerfile: deploy/docker/Dockerfile
-      args:
-        GOPROXY: "https://goproxy.cn"
-        OS_MIRROR: "http://mirrors.tencent.com/debian"
     # image: shortener:local
     container_name: shortener-server
     restart: unless-stopped

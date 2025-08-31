@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.bdev.cn/shortener/internal/ecodes"
-	"go.bdev.cn/shortener/internal/logics"
-	"go.bdev.cn/shortener/internal/types"
+	"go.xoder.cn/shortener/internal/ecodes"
+	"go.xoder.cn/shortener/internal/logics"
+	"go.xoder.cn/shortener/internal/types"
 )
 
 // HistoryHandler 历史记录处理器

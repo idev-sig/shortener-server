@@ -3,7 +3,7 @@ package utils
 import (
 	"math/rand"
 
-	"go.bdev.cn/shortener/internal/shared"
+	"go.xoder.cn/shortener/internal/shared"
 )
 
 // GenerateCode 生成短码(6位)

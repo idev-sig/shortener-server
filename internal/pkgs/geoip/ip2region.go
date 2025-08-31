@@ -15,17 +15,22 @@ type IP2Region struct {
 }
 
 // NewIP2Region 创建 IP2Region 结构体
-func NewIP2Region(dbPath string, loadMode string) (*IP2Region, error) {
+func NewIP2Region(dbPath string, loadMode string, version string) (*IP2Region, error) {
 	var err error
 	var searcher *xdb.Searcher
 
+	xdbVersion := xdb.IPv4
+	if version == "6" {
+		xdbVersion = xdb.IPv6
+	}
+
 	switch loadMode {
 	case "vector":
-		searcher, err = loadVectorIndex(dbPath)
+		searcher, err = loadVectorIndex(dbPath, xdbVersion)
 	case "memory":
-		searcher, err = loadMemoryIndex(dbPath)
+		searcher, err = loadMemoryIndex(dbPath, xdbVersion)
 	case "file":
-		searcher, err = loadFileIndex(dbPath)
+		searcher, err = loadFileIndex(dbPath, xdbVersion)
 	default:
 		return nil, fmt.Errorf("invalid load mode: %s", loadMode)
 	}
@@ -38,30 +43,30 @@ func NewIP2Region(dbPath string, loadMode string) (*IP2Region, error) {
 }
 
 // loadVectorIndex 加载向量索引
-func loadVectorIndex(dbPath string) (*xdb.Searcher, error) {
+func loadVectorIndex(dbPath string, version *xdb.Version) (*xdb.Searcher, error) {
 	vIndex, err := xdb.LoadVectorIndexFromFile(dbPath)
 	if err != nil {
 		return nil, err
 	}
-	return xdb.NewWithVectorIndex(dbPath, vIndex)
+	return xdb.NewWithVectorIndex(version, dbPath, vIndex)
 }
 
 // loadMemoryIndex 加载内存索引
-func loadMemoryIndex(dbPath string) (*xdb.Searcher, error) {
+func loadMemoryIndex(dbPath string, version *xdb.Version) (*xdb.Searcher, error) {
 	cBuff, err := xdb.LoadContentFromFile(dbPath)
 	if err != nil {
 		return nil, err
 	}
-	return xdb.NewWithBuffer(cBuff)
+	return xdb.NewWithBuffer(version, cBuff)
 }
 
 // loadFileIndex 加载文件索引
-func loadFileIndex(dbPath string) (*xdb.Searcher, error) {
-	return xdb.NewWithFileOnly(dbPath)
+func loadFileIndex(dbPath string, version *xdb.Version) (*xdb.Searcher, error) {
+	return xdb.NewWithFileOnly(version, dbPath)
 }
 
 // Search 搜索IP
-func (t *IP2Region) Search(ip uint32) (string, error) {
+func (t *IP2Region) Search(ip []byte) (string, error) {
 	return t.searcher.Search(ip)
 }
 

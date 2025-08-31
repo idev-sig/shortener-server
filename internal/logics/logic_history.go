@@ -8,12 +8,12 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
-	"go.bdev.cn/shortener/internal/dal/db/model"
-	"go.bdev.cn/shortener/internal/ecodes"
-	"go.bdev.cn/shortener/internal/pkgs/geoip"
-	"go.bdev.cn/shortener/internal/shared"
-	"go.bdev.cn/shortener/internal/types"
-	"go.bdev.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener/internal/dal/db/model"
+	"go.xoder.cn/shortener/internal/ecodes"
+	"go.xoder.cn/shortener/internal/pkgs/geoip"
+	"go.xoder.cn/shortener/internal/shared"
+	"go.xoder.cn/shortener/internal/types"
+	"go.xoder.cn/shortener/internal/utils"
 )
 
 // HistoryLogic 历史记录逻辑层
@@ -52,8 +52,8 @@ func (t *HistoryLogic) HistoryAdd(params types.HistoryParams) error {
 	}{}
 
 	if t.geoip != nil && t.geoip.Enabled {
-		if ipUint32, err := t.geoip.IP2Long(params.IPAddress); err == nil {
-			if ipInfo, err := t.geoip.Search(ipUint32); err == nil {
+		if ipByte, err := t.geoip.IPStr2Byte(params.IPAddress); err == nil {
+			if ipInfo, err := t.geoip.Search(ipByte); err == nil {
 				ipData := t.geoip.Parse(ipInfo)
 				geoInfo.Country = ipData.Country
 				geoInfo.Region = ipData.Region

@@ -10,7 +10,7 @@ var shiftIndex = []int{24, 16, 8, 0}
 
 // GeoIP 接口
 type GeoIP interface {
-	Search(ip uint32) (string, error)
+	Search(ip []byte) (string, error)
 	SearchByStr(ip string) (string, error)
 	Parse(data string) *GeoIPData
 }
@@ -37,7 +37,7 @@ func NewGeoIPManager(enabled bool, mode string, geoip GeoIP) *GeoIPManager {
 }
 
 // Search 搜索IP
-func (t *GeoIPManager) Search(ip uint32) (string, error) {
+func (t *GeoIPManager) Search(ip []byte) (string, error) {
 	return t.GeoIP.Search(ip)
 }
 
@@ -79,4 +79,23 @@ func (t *GeoIPManager) IP2Long(ip string) (uint32, error) {
 // Long2IP 将long转换为IP
 func (t *GeoIPManager) Long2IP(ip uint32) string {
 	return fmt.Sprintf("%d.%d.%d.%d", (ip>>24)&0xFF, (ip>>16)&0xFF, (ip>>8)&0xFF, ip&0xFF)
+}
+
+// IP2Long 转为 []byte
+func (t *GeoIPManager) Long2Byte(ip uint32) []byte {
+	ips := make([]byte, 4)
+	ips[0] = byte((ip >> 24) & 0xFF)
+	ips[1] = byte((ip >> 16) & 0xFF)
+	ips[2] = byte((ip >> 8) & 0xFF)
+	ips[3] = byte(ip & 0xFF)
+	return ips
+}
+
+// IPStr2Byte ip字符串 转为 []byte
+func (t *GeoIPManager) IPStr2Byte(ip string) ([]byte, error) {
+	ipInt, err := t.IP2Long(ip)
+	if err != nil {
+		return nil, err
+	}
+	return t.Long2Byte(ipInt), nil
 }

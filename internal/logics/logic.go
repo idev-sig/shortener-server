@@ -4,8 +4,8 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 
-	"go.bdev.cn/shortener/internal/cache"
-	"go.bdev.cn/shortener/internal/shared"
+	"go.xoder.cn/shortener/internal/cache"
+	"go.xoder.cn/shortener/internal/shared"
 )
 
 // logic 逻辑层

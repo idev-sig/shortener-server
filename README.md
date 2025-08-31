@@ -2,12 +2,12 @@
 
 一个超简单的短网址管理平台。
 
-**配置前端：[shortener-frontend](https://git.jetsung.com/idev/shortener-frontend)**
-**命令行工具：[shortener](./cmd/shortener/README.md)**
+- **配置前端：[shortener-frontend](https://git.jetsung.com/idev/shortener-frontend)**
+- **命令行工具：[shortener](./cmd/shortener/README.md)**
 
 ## 命令行
 ```bash
-go install go.bdev.cn/shortener/cmd/shortener@main
+go install go.xoder.cn/shortener/cmd/shortener@main
 ```
 
 ## [Docker](./deploy/docker/README.md)
@@ -111,8 +111,8 @@ just --list
     2. 修改配置文件 `config.toml` 中的 `cache.enabled` 字段为 `true`。
     3. 修改配置文件 `config.toml` 中的 `cache.type` 字段为 `valkey`。
 3. 若需要 IP 数据，需要配置 `ip2region` 数据库
-    1. 下载 [ip2region.xdb](https://github.com/lionsoul2014/ip2region/blob/master/data/ip2region.xdb) ，保存至 `./data/ip2region.xdb`。
-    2. 修改配置文件 `config.toml` 中的 `geoip.enabled` 字段为 `true`。
+    1. 下载 [ip2region](https://github.com/lionsoul2014/ip2region/blob/master/data/) [**V4**](https://github.com/lionsoul2014/ip2region/raw/refs/heads/master/data/ip2region_v4.xdb)、[**V6**](https://github.com/lionsoul2014/ip2region/raw/refs/heads/master/data/ip2region_v6.xdb) ，保存至 `./data/ip2region.xdb`。
+    2. 修改配置文件 `config.toml` 中的 `geoip.enabled` 字段为 `true`，`path` 修改为 `xdb` 的相对路径，`version` 字段的值为 `"4"`或者 `"6"`。
 4. 启动
     ```bash
     docker compose up -d
@@ -163,7 +163,7 @@ just --list
 
 ## 仓库镜像
 
-- https://git.jetsung.com/idev/shortener-server
-- https://framagit.org/idev/shortener-server
-- https://gitcode.com/idev/shortener-server
-- https://github.com/idev-sig/shortener-server
+- [https://git.jetsung.com/idev/shortener-server](MyCode)
+- [https://framagit.org/idev/shortener-server](Framagit)
+- [https://gitcode.com/idev/shortener-server](GitCode)
+- [https://github.com/idev-sig/shortener-server](GitHub)

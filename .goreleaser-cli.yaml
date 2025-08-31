@@ -1,0 +1,76 @@
+# GoReleaser configuration for shortener CLI tool
+# Usage: goreleaser release --config .goreleaser-cli.yaml --clean
+
+version: 2
+
+project_name: shortener
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+env:
+  - CGO_ENABLED=0
+
+builds:
+  - id: "shortener-cli"
+    binary: "shortener"    
+    main: ./cmd/shortener/main.go
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - loong64
+      - riscv64
+    ldflags:
+      - '-s -w'
+      - '-X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}'
+    ignore:
+      - goos: windows
+        goarch: loong64
+      - goos: windows
+        goarch: riscv64
+
+archives:
+  - id: "shortener-cli-archive"
+    ids: ["shortener-cli"]
+    name_template: >-
+      {{ .ProjectName }}-cli-
+      {{- .Version }}-
+      {{- .Os }}-
+      {{- if eq .Arch "x86_64" }}amd64
+      {{- else if eq .Arch "aarch64" }}arm64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    files:
+      - LICENSE
+      - cmd/shortener/README.md
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  draft: true
+  replace_existing_draft: true
+  use_existing_draft: true
+  replace_existing_artifacts: true
+  target_commitish: "{{ .Commit }}"
+  make_latest: true
+  header: |
+    ## {{ .ProjectName }} CLI {{ .Version }}
+    ---
+    Date: {{ .Date }}
+
+  footer: >-
+
+    ---
+
+    Released by [Jetsung Chan](https://github.com/jetsung).

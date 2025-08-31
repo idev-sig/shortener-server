@@ -1,33 +1,22 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-
-# The lines below are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/need to use them.
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
-
-# goreleaser release --clean
-# goreleaser release --snapshot --clean
-# goreleaser release --skip=publish
+# GoReleaser configuration for shortener server
+# Usage: goreleaser release --config .goreleaser-server.yaml --clean
 
 version: 2
 
-# project_name: shortener
+project_name: shortener
 
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
-    # you may remove this if you don't need go generate
     - go generate ./...
 
 env:
-  - ProjectCliName=shortener-cli
+  - CGO_ENABLED=0
 
 builds:
-  - id: "server"
-    env:
-      - CGO_ENABLED=0
+  - id: "shortener-server"
+    binary: "shortener-server"
+    main: ./main.go
     goos:
       - linux
       - windows
@@ -40,27 +29,23 @@ builds:
     ldflags:
       - '-s -w'
       - '-X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}'
-    binary: "shortener-server"
+    ignore:
+      - goos: windows
+        goarch: loong64
+      - goos: windows
+        goarch: riscv64
 
 archives:
-  - id: "shortener-server"
-    builds:
-      - "server"
-    formats:
-      - tar.gz
+  - id: "shortener-server-archive"
+    ids: ["shortener-server"]
     name_template: >-
-      {{ .ProjectName }}-
+      {{ .ProjectName }}-server-
       {{- .Version }}-
       {{- .Os }}-
       {{- if eq .Arch "x86_64" }}amd64
       {{- else if eq .Arch "aarch64" }}arm64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
-    # use zip for windows archives
-    format_overrides:
-      - goos: windows
-        formats:
-        - zip
     files:
       - LICENSE
       - README.md
@@ -75,7 +60,6 @@ changelog:
       - "^test:"
 
 release:
-  # disable: false
   draft: true
   replace_existing_draft: true
   use_existing_draft: true
@@ -83,7 +67,7 @@ release:
   target_commitish: "{{ .Commit }}"
   make_latest: true
   header: |
-    ## {{ .ProjectName }} {{ .Version }}
+    ## {{ .ProjectName }} Server {{ .Version }}
     ---
     Date: {{ .Date }}
 
@@ -93,33 +77,32 @@ release:
 
     Released by [Jetsung Chan](https://github.com/jetsung).
 
-# https://goreleaser.com/customization/nfpm/
 nfpms:
-  - bindir: '/opt/{{ .ProjectName }}'
+  - id: "shortener-server-package"
+    ids: ["shortener-server"]
+    bindir: '/opt/{{ .ProjectName }}'
     homepage: 'https://git.jetsung.com/idev/{{ .ProjectName }}'
     maintainer: 'Jetsung Chen <i@jetsung.com>'
     description: |-
-      {{ .ProjectName }} Service.
+      {{ .ProjectName }} Server Service.
     license: Apache 2.0
     formats:
       - deb
       - rpm
     file_name_template: >-
-      {{ .ProjectName }}_
+      {{ .ProjectName }}-server_
       {{- .Version }}_
       {{- .Os }}_
       {{- if eq .Arch "x86_64" }}amd64
       {{- else if eq .Arch "aarch64" }}arm64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
-    prerelease: beta1
-    release: 0.1.0
     contents:
       - src: 'config/config.toml'
         dst: '/opt/{{ .ProjectName }}/config.toml'
         type: config
-      - src: '{{ .ProjectName }}.service'
-        dst: '/opt/{{ .ProjectName }}/{{ .ProjectName }}.service'
+      - src: 'shortener-server.service'
+        dst: '/opt/{{ .ProjectName }}/shortener-server.service'
     scripts:
       preinstall: 'scripts/preinstall.sh'
       postinstall: 'scripts/postinstall.sh'

@@ -32,3 +32,14 @@ dist/
 /shortener-server
 /shortener
 
+
+# act
+.env
+.actenv
+.actrc
+.actrcs
+.artifacts
+.secrets
+event.json
+
+

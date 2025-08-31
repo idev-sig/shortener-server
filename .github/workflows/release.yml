@@ -4,16 +4,40 @@ on:
   push:
     tags:
       - "v*"
+      - 'shortener-v*'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
     - uses: actions/setup-go@v5
       with:
-        go-version: '^1.24'
+        go-version: '^1.25.0'
         check-latest: true
+    
+    - name: Determine GoReleaser config
+      id: config
+      run: |
+        if [[ ${{ github.ref_name }} =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+          echo "config_file=.goreleaser-server.yaml" >> $GITHUB_OUTPUT
+          echo "release_type=server" >> $GITHUB_OUTPUT
+          echo "Using server configuration for tag: ${{ github.ref_name }}"
+        elif [[ ${{ github.ref_name }} =~ ^shortener-v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+          echo "config_file=.goreleaser-cli.yaml" >> $GITHUB_OUTPUT
+          echo "release_type=cli" >> $GITHUB_OUTPUT
+          echo "Using CLI configuration for tag: ${{ github.ref_name }}"
+        else
+          echo "ERROR: Unsupported tag format: ${{ github.ref_name }}"
+          echo "Supported formats:"
+          echo "  - v1.0.0 (for server releases)"
+          echo "  - shortener-v1.0.0 (for CLI releases)"
+          exit 1
+        fi
+    
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v6
       with:
@@ -21,6 +45,7 @@ jobs:
         distribution: goreleaser
         # 'latest', 'nightly', or a semver
         version: latest
-        args: release --clean
+        args: release --config ${{ steps.config.outputs.config_file }} --clean
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        

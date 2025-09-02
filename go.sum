@@ -140,8 +140,8 @@ github.com/ua-parser/uap-go v0.0.0-20250326155420-f7f5a2f9f5bc h1:reH9QQKGFOq39M
 github.com/ua-parser/uap-go v0.0.0-20250326155420-f7f5a2f9f5bc/go.mod h1:gwANdYmo9R8LLwGnyDFWK2PMsaXXX2HhAvCnb/UhZsM=
 github.com/ugorji/go/codec v1.3.0 h1:Qd2W2sQawAfG8XSvzwhBeoGq71zXOC/Q1E9y/wUcsUA=
 github.com/ugorji/go/codec v1.3.0/go.mod h1:pRBVtBSKl77K30Bv8R2P+cLSGaTtex6fsA2Wjqmfxj4=
-github.com/valkey-io/valkey-go v1.0.63 h1:LNlDTcUxy9jxrmGHSvd0s/NsgEmQbvREYvvBAHCIir0=
-github.com/valkey-io/valkey-go v1.0.63/go.mod h1:bHmwjIEOrGq/ubOJfh5uMRs7Xj6mV3mQ/ZXUbmqpjqY=
+github.com/valkey-io/valkey-go v1.0.64 h1:3u4+b6D6zs9JQs254TLy4LqitCMHHr9XorP9GGk7XY4=
+github.com/valkey-io/valkey-go v1.0.64/go.mod h1:bHmwjIEOrGq/ubOJfh5uMRs7Xj6mV3mQ/ZXUbmqpjqY=
 golang.org/x/arch v0.19.0 h1:LmbDQUodHThXE+htjrnmVD73M//D9GTH6wFZjyDkjyU=
 golang.org/x/arch v0.19.0/go.mod h1:bdwinDaKcfZUGpH09BB7ZmOfhalA8lQdzl62l8gGWsk=
 golang.org/x/crypto v0.40.0 h1:r4x+VvoG5Fm+eJcxMaY8CQM7Lb0l1lsmjGBQ6s8BfKM=

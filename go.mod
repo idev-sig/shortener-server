@@ -14,7 +14,7 @@ require (
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.30.1
-	modernc.org/sqlite v1.38.2
+	modernc.org/sqlite v1.39.0
 	resty.dev/v3 v3.0.0-beta.3
 )
 

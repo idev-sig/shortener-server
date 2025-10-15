@@ -4,7 +4,7 @@ go 1.25.1
 
 require (
 	github.com/gin-gonic/gin v1.11.0
-	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20251015033617-8c7c83cf7f3d
+	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20251015053918-a2b76d38a943
 	github.com/redis/go-redis/v9 v9.14.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.21.0

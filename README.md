@@ -2,6 +2,9 @@
 
 一个超简单的短网址管理平台。
 
+> **本项目已停止维护。**   
+> **已使用 Rust 语言重构，新项目：<https://github.com/jetsung/shortener>**
+
 - **配置前端：[shortener-frontend](https://git.jetsung.com/idev/shortener-frontend)**
 - **命令行工具：[shortener](./cmd/shortener/README.md)**
 
@@ -139,31 +142,12 @@ just --list
         proxy_set_header Connection "upgrade";
         proxy_connect_timeout 99999;
     }
+    ```
     </details>
-
-## TODO
-
-- [x] 实现全部功能接口
-  - [x] `API` 权限校验
-- [x] 支持数据库
-  - [x] SQLite
-  - [x] PostgreSQL
-  - [x] MySQL
-- [x] 支持缓存
-  - [x] Redis
-  - [x] Valkey
-- [x] 制作 CLI 工具
-  - [x] 添加 OpenAPI
-- [x] 添加跳转请求日志记录
-- [x] `CI/CD` 构建
-  - [x] Docker 镜像构建与推送
-- [x] 实现管理平台接口
-- [x] 添加文档
-- [ ] 添加测试
 
 ## 仓库镜像
 
-- [https://git.jetsung.com/idev/shortener-server](MyCode)
-- [https://framagit.org/idev/shortener-server](Framagit)
-- [https://gitcode.com/idev/shortener-server](GitCode)
-- [https://github.com/idev-sig/shortener-server](GitHub)
+- [MyCode](https://git.jetsung.com/idev/shortener-server)
+- [Framagit](https://framagit.org/idev/shortener-server)
+- [GitCode](https://gitcode.com/idev/shortener-server)
+- [GitHub](https://github.com/idev-sig/shortener-server)

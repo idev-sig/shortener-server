@@ -27,7 +27,7 @@ func NewShortenLogic() *ShortenLogic {
 }
 
 // ShortenAdd 添加短链接
-func (t *ShortenLogic) ShortenAdd(code string, originalURL string, describe string) (int, types.ResShorten) {
+func (t *ShortenLogic) ShortenAdd(code string, originalURL string, description string) (int, types.ResShorten) {
 	result := types.ResShorten{}
 	existingURL := model.Url{}
 
@@ -46,7 +46,7 @@ func (t *ShortenLogic) ShortenAdd(code string, originalURL string, describe stri
 	newURL := model.Url{
 		ShortCode:   code,
 		OriginalURL: originalURL,
-		Describe:    describe,
+		Description:    description,
 		Status:      0,
 		CreatedAt:   nowTime,
 		UpdatedAt:   nowTime,
@@ -67,7 +67,7 @@ func (t *ShortenLogic) ShortenAdd(code string, originalURL string, describe stri
 		ShortCode:   newURL.ShortCode,
 		ShortURL:    t.GetSiteURL(newURL.ShortCode),
 		OriginalURL: newURL.OriginalURL,
-		Description: newURL.Describe,
+		Description: newURL.Description,
 		Status:      newURL.Status,
 		CreatedAt:   utils.TimeToStr(nowTime),
 		UpdatedAt:   utils.TimeToStr(nowTime),
@@ -109,7 +109,7 @@ func (t *ShortenLogic) ShortenDeleteAll(ids []string) int {
 }
 
 // ShortenUpdate 更新短链接
-func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, describe string) (int, types.ResShorten) {
+func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, description string) (int, types.ResShorten) {
 	result := types.ResShorten{}
 
 	var existingURL model.Url
@@ -127,8 +127,8 @@ func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, describe s
 	if originalURL != "" {
 		updates["original_url"] = originalURL
 	}
-	if describe != "" {
-		updates["describe"] = describe
+	if description != "" {
+		updates["description"] = description
 	}
 
 	nowTime := time.Now().Local()
@@ -147,7 +147,7 @@ func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, describe s
 		ShortCode:   existingURL.ShortCode,
 		ShortURL:    t.GetSiteURL(existingURL.ShortCode),
 		OriginalURL: existingURL.OriginalURL,
-		Description: existingURL.Describe,
+		Description: existingURL.Description,
 		Status:      existingURL.Status,
 		UpdatedAt:   utils.TimeToStr(nowTime),
 		CreatedAt:   utils.TimeToStr(existingURL.CreatedAt),
@@ -188,7 +188,7 @@ func (t *ShortenLogic) ShortenFind(code string) (int, types.ResShorten) {
 		ShortCode:   data.ShortCode,
 		ShortURL:    t.GetSiteURL(data.ShortCode),
 		OriginalURL: data.OriginalURL,
-		Description: data.Describe,
+		Description: data.Description,
 		Status:      data.Status,
 		CreatedAt:   utils.TimeToStr(data.CreatedAt),
 		UpdatedAt:   utils.TimeToStr(data.UpdatedAt),
@@ -252,7 +252,7 @@ func (t *ShortenLogic) ShortenAll(reqQuery types.ReqQueryShorten) (int, []types.
 			ShortCode:   item.ShortCode,
 			ShortURL:    t.GetSiteURL(item.ShortCode),
 			OriginalURL: item.OriginalURL,
-			Description: item.Describe,
+			Description: item.Description,
 			Status:      item.Status,
 			CreatedAt:   utils.TimeToStr(item.CreatedAt),
 			UpdatedAt:   utils.TimeToStr(item.UpdatedAt),

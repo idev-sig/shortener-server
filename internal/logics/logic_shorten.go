@@ -64,10 +64,10 @@ func (t *ShortenLogic) ShortenAdd(code string, originalURL string, describe stri
 	// 4. 构造返回结果
 	result = types.ResShorten{
 		ID:          newURL.ID,
-		Code:        newURL.ShortCode,
+		ShortCode:   newURL.ShortCode,
 		ShortURL:    t.GetSiteURL(newURL.ShortCode),
 		OriginalURL: newURL.OriginalURL,
-		Describe:    newURL.Describe,
+		Description: newURL.Describe,
 		Status:      newURL.Status,
 		CreatedAt:   utils.TimeToStr(nowTime),
 		UpdatedAt:   utils.TimeToStr(nowTime),
@@ -144,10 +144,10 @@ func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, describe s
 
 	result = types.ResShorten{
 		ID:          existingURL.ID,
-		Code:        existingURL.ShortCode,
+		ShortCode:   existingURL.ShortCode,
 		ShortURL:    t.GetSiteURL(existingURL.ShortCode),
 		OriginalURL: existingURL.OriginalURL,
-		Describe:    existingURL.Describe,
+		Description: existingURL.Describe,
 		Status:      existingURL.Status,
 		UpdatedAt:   utils.TimeToStr(nowTime),
 		CreatedAt:   utils.TimeToStr(existingURL.CreatedAt),
@@ -185,10 +185,10 @@ func (t *ShortenLogic) ShortenFind(code string) (int, types.ResShorten) {
 
 	result := types.ResShorten{
 		ID:          data.ID,
-		Code:        data.ShortCode,
+		ShortCode:   data.ShortCode,
 		ShortURL:    t.GetSiteURL(data.ShortCode),
 		OriginalURL: data.OriginalURL,
-		Describe:    data.Describe,
+		Description: data.Describe,
 		Status:      data.Status,
 		CreatedAt:   utils.TimeToStr(data.CreatedAt),
 		UpdatedAt:   utils.TimeToStr(data.UpdatedAt),
@@ -249,10 +249,10 @@ func (t *ShortenLogic) ShortenAll(reqQuery types.ReqQueryShorten) (int, []types.
 	for _, item := range data {
 		results = append(results, types.ResShorten{
 			ID:          item.ID,
-			Code:        item.ShortCode,
+			ShortCode:   item.ShortCode,
 			ShortURL:    t.GetSiteURL(item.ShortCode),
 			OriginalURL: item.OriginalURL,
-			Describe:    item.Describe,
+			Description: item.Describe,
 			Status:      item.Status,
 			CreatedAt:   utils.TimeToStr(item.CreatedAt),
 			UpdatedAt:   utils.TimeToStr(item.UpdatedAt),

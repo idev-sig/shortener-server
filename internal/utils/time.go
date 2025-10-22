@@ -7,14 +7,14 @@ func TimestampToTime(timestamp int64) time.Time {
 	return time.Unix(timestamp, 0)
 }
 
-// TimeToStr 时间转字符串
+// TimeToStr 时间转字符串 (ISO 8601 格式)
 func TimeToStr(nowTime time.Time) string {
-	return nowTime.Format("2006-01-02 15:04:05")
+	return nowTime.UTC().Format(time.RFC3339)
 }
 
-// StrToTime 字符串转时间
+// StrToTime 字符串转时间 (ISO 8601 格式)
 func StrToTime(str string) (time.Time, error) {
-	return time.Parse("2006-01-02 15:04:05", str)
+	return time.Parse(time.RFC3339, str)
 }
 
 // StrToTimestamp 字符串转时间戳
@@ -23,7 +23,7 @@ func StrToTimestamp(str string) (int64, error) {
 	return time.Unix(), err
 }
 
-// TimestampToStr 时间戳转字符串
+// TimestampToStr 时间戳转字符串 (ISO 8601 格式)
 func TimestampToStr(timestamp int64) string {
-	return TimestampToTime(timestamp).Format("2006-01-02 15:04:05")
+	return TimestampToTime(timestamp).UTC().Format(time.RFC3339)
 }

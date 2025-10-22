@@ -51,7 +51,7 @@ func (t *ShortenHandler) ShortenRedirect(c *gin.Context) {
 		_ = record.HistoryAdd(
 			types.HistoryParams{
 				URLID:     data.ID,
-				ShortCode: data.Code,
+				ShortCode: data.ShortCode,
 				IPAddress: c.ClientIP(),
 				UserAgent: c.Request.UserAgent(),
 				Referer:   c.Request.Referer(),
@@ -65,9 +65,9 @@ func (t *ShortenHandler) ShortenRedirect(c *gin.Context) {
 // ShortenAdd 添加短链接
 func (t *ShortenHandler) ShortenAdd(c *gin.Context) {
 	var reqJson struct {
-		Code        string `json:"code,omitempty"`
+		ShortCode   string `json:"short_code,omitempty"`
 		OriginalURL string `json:"original_url" binding:"required,url"`
-		Describe    string `json:"describe,omitempty"`
+		Description string `json:"description,omitempty"`
 	}
 
 	if err := c.ShouldBindJSON(&reqJson); err != nil {
@@ -81,16 +81,16 @@ func (t *ShortenHandler) ShortenAdd(c *gin.Context) {
 	}
 
 	// 生成短码
-	if reqJson.Code == "" {
-		reqJson.Code = utils.GenerateCode(shared.GlobalShorten.Length)
+	if reqJson.ShortCode == "" {
+		reqJson.ShortCode = utils.GenerateCode(shared.GlobalShorten.Length)
 	}
 
-	if len(reqJson.Code) > 16 {
+	if len(reqJson.ShortCode) > 16 {
 		c.JSON(http.StatusBadRequest, t.JsonRespErr(ecodes.ErrCodeBadRequest))
 		return
 	}
 
-	errCode, data := t.logic.ShortenAdd(reqJson.Code, reqJson.OriginalURL, reqJson.Describe)
+	errCode, data := t.logic.ShortenAdd(reqJson.ShortCode, reqJson.OriginalURL, reqJson.Description)
 	if errCode != 0 {
 		errInfo := t.JsonRespErr(errCode)
 		if errCode == ecodes.ErrCodeConflict {
@@ -101,7 +101,7 @@ func (t *ShortenHandler) ShortenAdd(c *gin.Context) {
 		return
 	}
 
-	c.Header("Location", c.Request.RequestURI+"/"+data.Code)
+	c.Header("Location", c.Request.RequestURI+"/"+data.ShortCode)
 	c.JSON(http.StatusCreated, data)
 }
 
@@ -159,7 +159,7 @@ func (t *ShortenHandler) ShortenUpdate(c *gin.Context) {
 
 	var reqJson struct {
 		OriginalURL string `json:"original_url,omitempty" binding:"omitempty,url"`
-		Describe    string `json:"describe,omitempty"`
+		Description string `json:"description,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&reqJson); err != nil {
 		c.JSON(http.StatusBadRequest, t.JsonRespErr(ecodes.ErrCodeInvalidParam))
@@ -171,7 +171,7 @@ func (t *ShortenHandler) ShortenUpdate(c *gin.Context) {
 		return
 	}
 
-	errCode, data := t.logic.ShortenUpdate(reqUri.Code, reqJson.OriginalURL, reqJson.Describe)
+	errCode, data := t.logic.ShortenUpdate(reqUri.Code, reqJson.OriginalURL, reqJson.Description)
 	if errCode != ecodes.ErrCodeSuccess {
 		errInfo := t.JsonRespErr(errCode)
 		if errCode == ecodes.ErrCodeNotFound {

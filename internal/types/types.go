@@ -29,33 +29,33 @@ type ReqQueryHistory struct {
 // ResShorten 短链接响应
 type ResShorten struct {
 	ID          int64  `json:"id"`
-	Code        string `json:"code"`
+	ShortCode   string `json:"short_code"`
 	ShortURL    string `json:"short_url"`
 	OriginalURL string `json:"original_url"`
-	Describe    string `json:"describe"`
-	Status      int8   `json:"status"`
+	Description string `json:"description,omitempty"`
+	Status      int8   `json:"status"` // 0=启用, 1=禁用, 2=未知
 	CreatedAt   string `json:"created_at"`
 	UpdatedAt   string `json:"updated_at"`
 }
 
 // ResHistory 历史记录响应
 type ResHistory struct {
-	ID           int64  `json:"id"`
-	UrlID        int64  `json:"url_id"`
-	ShortCode    string `json:"short_code"`
-	IPAddress    string `json:"ip_address"`
-	UserAgent    string `json:"user_agent"`
-	Referer      string `json:"referer"`
-	Country      string `json:"country"`
-	Region       string `json:"region"`
-	Province     string `json:"province"`
-	City         string `json:"city"`
-	ISP          string `json:"isp"`
-	DeviceType   string `json:"device_type"`
-	OS           string `json:"os"`
-	Browser      string `json:"browser"`
-	AccessedTime string `json:"accessed_at"`
-	CreatedTime  string `json:"created_at"`
+	ID         int64  `json:"id"`
+	UrlID      int64  `json:"url_id"`
+	ShortCode  string `json:"short_code"`
+	IPAddress  string `json:"ip_address"`
+	UserAgent  string `json:"user_agent"`
+	Referer    string `json:"referer,omitempty"`
+	Country    string `json:"country,omitempty"`
+	Region     string `json:"region,omitempty"`
+	Province   string `json:"province,omitempty"`
+	City       string `json:"city,omitempty"`
+	ISP        string `json:"isp,omitempty"`
+	DeviceType string `json:"device_type,omitempty"`
+	OS         string `json:"os,omitempty"`
+	Browser    string `json:"browser,omitempty"`
+	AccessedAt string `json:"accessed_at"`
+	CreatedAt  string `json:"created_at"`
 }
 
 // ResPage 分页响应

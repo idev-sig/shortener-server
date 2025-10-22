@@ -216,13 +216,13 @@ func newShortenCreateCmd() *cobra.Command {
 			description, _ := cmd.Flags().GetString("desc")
 
 			req := struct {
-				Code        string `json:"code,omitempty"`
+				ShortCode   string `json:"short_code,omitempty"`
 				OriginalURL string `json:"original_url" binding:"required"`
-				Describe    string `json:"describe,omitempty"`
+				Description string `json:"description,omitempty"`
 			}{
-				Code:        customCode,
+				ShortCode:   customCode,
 				OriginalURL: originURL,
-				Describe:    description,
+				Description: description,
 			}
 
 			client := resty.New()
@@ -253,10 +253,10 @@ func newShortenCreateCmd() *cobra.Command {
 				return fmt.Errorf("invalid short url: %s", response.OriginalURL)
 			}
 
-			fmt.Printf("Created short Code: %s\n", response.Code)
+			fmt.Printf("Created short Code: %s\n", response.ShortCode)
 			fmt.Printf("         Short URL: %s\n", response.ShortURL)
 			fmt.Printf("      Original URL: %s\n", response.OriginalURL)
-			fmt.Printf("       Description: %s\n", response.Describe)
+			fmt.Printf("       Description: %s\n", response.Description)
 			return nil
 		},
 	}
@@ -337,10 +337,10 @@ func newShortenUpdateCmd() *cobra.Command {
 
 			req := struct {
 				OriginalURL string `json:"original_url,omitempty" binding:"omitempty,url"`
-				Describe    string `json:"describe,omitempty"`
+				Description string `json:"description,omitempty"`
 			}{
 				OriginalURL: originURL,
-				Describe:    description,
+				Description: description,
 			}
 
 			var response types.ResShorten
@@ -371,10 +371,10 @@ func newShortenUpdateCmd() *cobra.Command {
 				return fmt.Errorf("invalid short code: %s", code)
 			}
 
-			fmt.Printf("Updated short Code: %s\n", response.Code)
+			fmt.Printf("Updated short Code: %s\n", response.ShortCode)
 			fmt.Printf("         Short URL: %s\n", response.ShortURL)
 			fmt.Printf("      Original URL: %s\n", response.OriginalURL)
-			fmt.Printf("       Description: %s\n", response.Describe)
+			fmt.Printf("       Description: %s\n", response.Description)
 			return nil
 		},
 	}
@@ -429,10 +429,10 @@ func newShortenGetCmd() *cobra.Command {
 				return fmt.Errorf("invalid short code: %s", code)
 			}
 
-			fmt.Printf("  Short Code: %s\n", response.Code)
+			fmt.Printf("  Short Code: %s\n", response.ShortCode)
 			fmt.Printf("   Short URL: %s\n", response.ShortURL)
 			fmt.Printf("Original URL: %s\n", response.OriginalURL)
-			fmt.Printf(" Description: %s\n", response.Describe)
+			fmt.Printf(" Description: %s\n", response.Description)
 			return nil
 		},
 	}
@@ -566,11 +566,11 @@ func newShortenListCmd() *cobra.Command {
 			}
 
 			for _, item := range response.Data {
-				fmt.Printf("  Short Code: %s\n", item.Code)
+				fmt.Printf("  Short Code: %s\n", item.ShortCode)
 				fmt.Printf("   Short URL: %s\n", item.ShortURL)
 				fmt.Printf("Original URL: %s\n", item.OriginalURL)
-				if item.Describe != "" {
-					fmt.Printf(" Description: %s\n", item.Describe)
+				if item.Description != "" {
+					fmt.Printf(" Description: %s\n", item.Description)
 				}
 				fmt.Println("--------------------------------")
 			}

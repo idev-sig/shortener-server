@@ -140,22 +140,22 @@ func (t *HistoryLogic) HistoryAll(reqQuery types.ReqQueryHistory) (int, []types.
 
 	for _, item := range data {
 		results = append(results, types.ResHistory{
-			ID:           item.ID,
-			UrlID:        item.UrlID,
-			ShortCode:    item.ShortCode,
-			IPAddress:    item.IPAddress,
-			UserAgent:    item.UserAgent,
-			Referer:      item.Referer,
-			Country:      item.Country,
-			Region:       item.Region,
-			Province:     item.Province,
-			City:         item.City,
-			ISP:          item.ISP,
-			DeviceType:   item.DeviceType,
-			OS:           item.OS,
-			Browser:      item.Browser,
-			AccessedTime: utils.TimeToStr(item.AccessedAt),
-			CreatedTime:  utils.TimeToStr(item.CreatedAt),
+			ID:         item.ID,
+			UrlID:      item.UrlID,
+			ShortCode:  item.ShortCode,
+			IPAddress:  item.IPAddress,
+			UserAgent:  item.UserAgent,
+			Referer:    item.Referer,
+			Country:    item.Country,
+			Region:     item.Region,
+			Province:   item.Province,
+			City:       item.City,
+			ISP:        item.ISP,
+			DeviceType: item.DeviceType,
+			OS:         item.OS,
+			Browser:    item.Browser,
+			AccessedAt: utils.TimeToStr(item.AccessedAt),
+			CreatedAt:  utils.TimeToStr(item.CreatedAt),
 		})
 	}
 

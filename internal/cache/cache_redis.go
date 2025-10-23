@@ -8,7 +8,7 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/redis/go-redis/v9"
 
-	"go.xoder.cn/shortener/internal/types"
+	"go.xoder.cn/shortener-server/internal/types"
 )
 
 // RedisCache 缓存

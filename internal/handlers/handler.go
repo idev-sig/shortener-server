@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	v1 "go.xoder.cn/shortener/internal/handlers/v1"
+	v1 "go.xoder.cn/shortener-server/internal/handlers/v1"
 )
 
 // Handler is the handler struct

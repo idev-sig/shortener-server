@@ -6,11 +6,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.xoder.cn/shortener/internal/ecodes"
-	"go.xoder.cn/shortener/internal/logics"
-	"go.xoder.cn/shortener/internal/shared"
-	"go.xoder.cn/shortener/internal/types"
-	"go.xoder.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener-server/internal/ecodes"
+	"go.xoder.cn/shortener-server/internal/logics"
+	"go.xoder.cn/shortener-server/internal/shared"
+	"go.xoder.cn/shortener-server/internal/types"
+	"go.xoder.cn/shortener-server/internal/utils"
 )
 
 // ShortenHandler 短链接处理器

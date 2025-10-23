@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.xoder.cn/shortener/internal/handlers"
+	"go.xoder.cn/shortener-server/internal/handlers"
 )
 
 func NewRouter() *gin.Engine {

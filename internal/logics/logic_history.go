@@ -8,12 +8,12 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
-	"go.xoder.cn/shortener/internal/dal/db/model"
-	"go.xoder.cn/shortener/internal/ecodes"
-	"go.xoder.cn/shortener/internal/pkgs/geoip"
-	"go.xoder.cn/shortener/internal/shared"
-	"go.xoder.cn/shortener/internal/types"
-	"go.xoder.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener-server/internal/dal/db/model"
+	"go.xoder.cn/shortener-server/internal/ecodes"
+	"go.xoder.cn/shortener-server/internal/pkgs/geoip"
+	"go.xoder.cn/shortener-server/internal/shared"
+	"go.xoder.cn/shortener-server/internal/types"
+	"go.xoder.cn/shortener-server/internal/utils"
 )
 
 // HistoryLogic 历史记录逻辑层

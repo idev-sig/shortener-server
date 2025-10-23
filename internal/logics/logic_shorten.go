@@ -8,10 +8,10 @@ import (
 	"github.com/bytedance/sonic"
 	"gorm.io/gorm"
 
-	"go.xoder.cn/shortener/internal/dal/db/model"
-	"go.xoder.cn/shortener/internal/ecodes"
-	"go.xoder.cn/shortener/internal/types"
-	"go.xoder.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener-server/internal/dal/db/model"
+	"go.xoder.cn/shortener-server/internal/ecodes"
+	"go.xoder.cn/shortener-server/internal/types"
+	"go.xoder.cn/shortener-server/internal/utils"
 )
 
 // ShortenLogic 短链接逻辑层

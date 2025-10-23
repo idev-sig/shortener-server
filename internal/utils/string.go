@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"go.xoder.cn/shortener/internal/shared"
+	"go.xoder.cn/shortener-server/internal/shared"
 )
 
 // GenerateCode 生成短码(6位)

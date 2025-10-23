@@ -3,8 +3,8 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 
-	"go.xoder.cn/shortener/internal/middlewares"
-	"go.xoder.cn/shortener/internal/shared"
+	"go.xoder.cn/shortener-server/internal/middlewares"
+	"go.xoder.cn/shortener-server/internal/shared"
 )
 
 func authMiddleware() gin.HandlerFunc {

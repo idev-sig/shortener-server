@@ -5,9 +5,9 @@ import (
 
 	"gorm.io/gorm"
 
-	"go.xoder.cn/shortener/internal/cache"
-	"go.xoder.cn/shortener/internal/pkgs/geoip"
-	"go.xoder.cn/shortener/internal/types"
+	"go.xoder.cn/shortener-server/internal/cache"
+	"go.xoder.cn/shortener-server/internal/pkgs/geoip"
+	"go.xoder.cn/shortener-server/internal/types"
 )
 
 var (

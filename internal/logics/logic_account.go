@@ -3,8 +3,8 @@ package logics
 import (
 	"errors"
 
-	"go.xoder.cn/shortener/internal/shared"
-	"go.xoder.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener-server/internal/shared"
+	"go.xoder.cn/shortener-server/internal/utils"
 )
 
 // AccountLogic 账号处理逻辑

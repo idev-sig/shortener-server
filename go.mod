@@ -1,4 +1,4 @@
-module go.xoder.cn/shortener
+module go.xoder.cn/shortener-server
 
 go 1.25.3
 

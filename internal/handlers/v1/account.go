@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.xoder.cn/shortener/internal/ecodes"
-	"go.xoder.cn/shortener/internal/logics"
+	"go.xoder.cn/shortener-server/internal/ecodes"
+	"go.xoder.cn/shortener-server/internal/logics"
 )
 
 // AccountHandler 账号处理器

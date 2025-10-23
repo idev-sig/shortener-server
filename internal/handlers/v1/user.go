@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.xoder.cn/shortener/internal/shared"
+	"go.xoder.cn/shortener-server/internal/shared"
 )
 
 // UserHandler 用户处理器

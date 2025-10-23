@@ -5,9 +5,9 @@ import (
 
 	"github.com/spf13/viper"
 
-	"go.xoder.cn/shortener/internal/shared"
-	"go.xoder.cn/shortener/internal/types"
-	"go.xoder.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener-server/internal/shared"
+	"go.xoder.cn/shortener-server/internal/types"
+	"go.xoder.cn/shortener-server/internal/utils"
 )
 
 // initSharedConfig 初始化共享配置

@@ -10,7 +10,7 @@
 
 ## 命令行
 ```bash
-go install go.xoder.cn/shortener/cmd/shortener@main
+go install go.xoder.cn/shortener-server/cmd/shortener@main
 ```
 
 ## [Docker](./docker/README.md)

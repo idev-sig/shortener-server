@@ -8,7 +8,7 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/valkey-io/valkey-go"
 
-	"go.xoder.cn/shortener/internal/types"
+	"go.xoder.cn/shortener-server/internal/types"
 )
 
 // ValkeyCache 缓存

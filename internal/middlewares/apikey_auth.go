@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go.xoder.cn/shortener/internal/ecodes"
-	"go.xoder.cn/shortener/internal/shared"
-	"go.xoder.cn/shortener/internal/types"
+	"go.xoder.cn/shortener-server/internal/ecodes"
+	"go.xoder.cn/shortener-server/internal/shared"
+	"go.xoder.cn/shortener-server/internal/types"
 )
 
 // ApiKeyAuth 检查请求头中的 API Key

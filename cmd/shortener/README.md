@@ -5,7 +5,7 @@
 ## 使用帮助
 ### 安装
 ```bash
-go install go.xoder.cn/shortener/cmd/shortener@latest
+go install go.xoder.cn/shortener-server/cmd/shortener@latest
 ```
 
 ### 初始化

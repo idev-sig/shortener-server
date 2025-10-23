@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/viper"
 	"resty.dev/v3"
 
-	"go.xoder.cn/shortener/internal/types"
+	"go.xoder.cn/shortener-server/internal/types"
 )
 
 // Config 配置

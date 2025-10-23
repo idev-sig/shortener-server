@@ -13,9 +13,9 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"go.xoder.cn/shortener/internal/dal/db/model"
-	"go.xoder.cn/shortener/internal/shared"
-	"go.xoder.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener-server/internal/dal/db/model"
+	"go.xoder.cn/shortener-server/internal/shared"
+	"go.xoder.cn/shortener-server/internal/utils"
 )
 
 // initDB 初始化数据库

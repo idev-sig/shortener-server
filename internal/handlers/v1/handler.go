@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"go.xoder.cn/shortener/internal/ecodes"
-	"go.xoder.cn/shortener/internal/types"
-	"go.xoder.cn/shortener/internal/utils"
+	"go.xoder.cn/shortener-server/internal/ecodes"
+	"go.xoder.cn/shortener-server/internal/types"
+	"go.xoder.cn/shortener-server/internal/utils"
 )
 
 type handler struct{}

@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"os"
 
-	_ "go.xoder.cn/shortener/internal/bootstrap"
-	"go.xoder.cn/shortener/internal/shared"
+	_ "go.xoder.cn/shortener-server/internal/bootstrap"
+	"go.xoder.cn/shortener-server/internal/shared"
 
 	"github.com/spf13/viper"
 
-	"go.xoder.cn/shortener/internal/routers"
+	"go.xoder.cn/shortener-server/internal/routers"
 )
 
 //go:embed version.txt

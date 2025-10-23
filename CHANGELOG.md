@@ -3,6 +3,9 @@
 ## [0.3.0] - 2025-10-23
 
 ### 重大变更 (Breaking Changes)
+- **模块名称变更**: 项目模块名从 `go.xoder.cn/shortener` 更改为 `go.xoder.cn/shortener-server`
+  - 影响所有 Go 源文件的 import 路径
+  - 需要更新 `go.mod` 和所有依赖此模块的项目
 
 #### API 字段重命名
 - **短链接相关字段**

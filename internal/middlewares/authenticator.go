@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -58,8 +59,8 @@ func MultiAuthMiddleware(authenticators ...Authenticator) gin.HandlerFunc {
 			success, err := auth.Authenticate(c)
 			if err != nil {
 				c.AbortWithStatusJSON(http.StatusInternalServerError, types.ResErr{
-					ErrCode: ecodes.ErrCodeUserAuthFailed,
-					ErrInfo: ecodes.GetErrCodeMessage(ecodes.ErrCodeUserAuthFailed),
+					ErrorCode:    fmt.Sprintf("%d", ecodes.ErrCodeUserAuthFailed),
+					ErrorMessage: ecodes.GetErrCodeMessage(ecodes.ErrCodeUserAuthFailed),
 				})
 				return
 			}
@@ -70,8 +71,8 @@ func MultiAuthMiddleware(authenticators ...Authenticator) gin.HandlerFunc {
 		}
 
 		c.AbortWithStatusJSON(http.StatusUnauthorized, types.ResErr{
-			ErrCode: ecodes.ErrCodeUnauthorized,
-			ErrInfo: ecodes.GetErrCodeMessage(ecodes.ErrCodeUnauthorized),
+			ErrorCode:    fmt.Sprintf("%d", ecodes.ErrCodeUnauthorized),
+			ErrorMessage: ecodes.GetErrCodeMessage(ecodes.ErrCodeUnauthorized),
 		})
 	}
 }

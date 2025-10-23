@@ -25,7 +25,7 @@ target "_common" {
         "org.opencontainers.image.authors" = "Jetsung Chan<i@jetsung.com>"
     }
     context = "."
-    dockerfile = "deploy/docker/Dockerfile"
+    dockerfile = "docker/Dockerfile"
     args = {
         GO_VERSION="${GO_VERSION}"
         GOPROXY = null

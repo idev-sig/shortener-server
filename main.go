@@ -2,7 +2,9 @@ package main
 
 import (
 	_ "embed"
+	"flag"
 	"fmt"
+	"os"
 
 	_ "go.xoder.cn/shortener/internal/bootstrap"
 	"go.xoder.cn/shortener/internal/shared"
@@ -31,6 +33,16 @@ var description = `
 `
 
 func main() {
+	// 定义命令行参数
+	configFile := flag.String("config", "", "配置文件路径 (例如: -config /path/to/config.toml)")
+	flag.Parse()
+
+	// 如果指定了配置文件，则设置环境变量
+	if *configFile != "" {
+		os.Setenv("SHORTENER_CONFIG_FILE", *configFile)
+		fmt.Printf("使用配置文件: %s\n\n", *configFile)
+	}
+
 	addr := viper.GetString("server.address")
 	if addr == "" {
 		addr = ":8080"

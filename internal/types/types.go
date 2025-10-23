@@ -7,23 +7,23 @@ type ReqCode struct {
 
 // ReqQuery 请求参数结构体
 type ReqQuery struct {
-	Page     int64  `form:"page,default=1" binding:"min=1"`
-	PageSize int64  `form:"page_size,default=10" binding:"min=1,max=100"`
-	SortBy   string `form:"sort_by,omitempty"`
-	Order    string `form:"order,omitempty" binding:"omitempty,oneof=asc desc"`
+	Page    int64  `form:"page,default=1" binding:"min=1"`
+	PerPage int64  `form:"per_page,default=10" binding:"min=1,max=100"`
+	SortBy  string `form:"sort_by,omitempty"`
+	Order   string `form:"order,omitempty" binding:"omitempty,oneof=asc desc"`
 }
 
 type ReqQueryShorten struct {
 	ReqQuery
-	Code        string `form:"code,omitempty" binding:"omitempty"`
+	ShortCode   string `form:"short_code,omitempty" binding:"omitempty"`
 	OriginalURL string `form:"original_url,omitempty" binding:"omitempty"`
 	Status      int64  `form:"status,omitempty,default=-1" binding:"omitempty"`
 }
 
 type ReqQueryHistory struct {
 	ReqQuery
-	Code string `form:"short_code,omitempty" binding:"omitempty"`
-	IP   string `form:"ip_address,omitempty" binding:"omitempty"`
+	ShortCode string `form:"short_code,omitempty" binding:"omitempty"`
+	IPAddress string `form:"ip_address,omitempty" binding:"omitempty"`
 }
 
 // ResShorten 短链接响应
@@ -58,19 +58,19 @@ type ResHistory struct {
 	CreatedAt  string `json:"created_at"`
 }
 
-// ResPage 分页响应
+// ResPage 分页响应 (对应 OpenAPI PageMeta)
 type ResPage struct {
-	Page         int64 `json:"page"`          // 当前页码（从1开始）
-	PageSize     int64 `json:"page_size"`     // 每页条数（可选返回，便于客户端验证）
-	CurrentCount int64 `json:"current_count"` // 当前页实际条数
-	TotalItems   int64 `json:"total_items"`   // 符合条件的总条数
-	TotalPages   int64 `json:"total_pages"`   // 总页数
+	Page       int64 `json:"page"`        // 当前页码
+	PerPage    int64 `json:"per_page"`    // 每页数量
+	Count      int64 `json:"count"`       // 当前页条目数
+	Total      int64 `json:"total"`       // 总条目数
+	TotalPages int64 `json:"total_pages"` // 总页数
 }
 
-// ResErr 错误响应
+// ResErr 错误响应 (对应 OpenAPI ErrorResponse)
 type ResErr struct {
-	ErrCode int    `json:"errcode"`
-	ErrInfo string `json:"errinfo"`
+	ErrorCode    string `json:"error_code"`
+	ErrorMessage string `json:"error_message,omitempty"`
 }
 
 // ResSuccess 成功响应

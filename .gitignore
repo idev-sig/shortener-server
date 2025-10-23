@@ -27,11 +27,12 @@ dist/
 
 /tmp/
 /data/
-/config/*/
-/config.toml
+/config/
 /shortener-server
 /shortener
 
+# DEBUG
+__debug_*
 
 # act
 .env

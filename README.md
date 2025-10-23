@@ -13,7 +13,7 @@
 go install go.xoder.cn/shortener/cmd/shortener@main
 ```
 
-## [Docker](./deploy/docker/README.md)
+## [Docker](./docker/README.md)
 
 > **版本：** `latest`, `main`, <`TAG`>
 
@@ -44,6 +44,9 @@ vi config/dev/config.toml
 ### 3. 运行
 ```bash
 go run .
+
+# 或指定配置文件路径
+go run . -config /path/to/config.toml
 ```
 
 ### 4. 构建
@@ -52,6 +55,19 @@ go build
 
 # 支持 GoReleaser 方式构建
 goreleaser release --snapshot --clean
+```
+
+### 5. 使用自定义配置文件
+```bash
+# 使用 -config 参数指定配置文件路径
+./shortener-server -config /path/to/config.toml
+
+# 或使用默认配置文件搜索路径（按优先级）：
+# 1. ./config/dev/config.toml
+# 2. ./config/prod/config.toml
+# 3. ./config/config.toml
+# 4. ./config.toml
+./shortener-server
 ```
 
 ### 更多功能
@@ -102,6 +118,16 @@ just --list
     ```bash
     systemctl start shortener-server
     systemctl enable shortener-server
+    ```
+5. 使用自定义配置文件（可选）
+    ```bash
+    # 直接运行时指定配置文件
+    /usr/bin/shortener-server -config /path/to/config.toml
+    
+    # 或修改 systemd 服务文件
+    # 编辑 /etc/systemd/system/shortener-server.service
+    # 在 ExecStart 行添加 -config 参数
+    # ExecStart=/usr/bin/shortener-server -config /etc/shortener-server/config.toml
     ```
 
 **若需要前端管理平台，需要使用 [shortener-frontend](https://github.com/idev-sig/shortener-frontend/releases)** 。

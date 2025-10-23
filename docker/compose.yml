@@ -1,8 +1,8 @@
 services:
   shortener:
     build:
-      context: ../../
-      dockerfile: deploy/docker/Dockerfile
+      context: ../
+      dockerfile: docker/Dockerfile
     # image: shortener:local
     container_name: shortener-server
     restart: unless-stopped

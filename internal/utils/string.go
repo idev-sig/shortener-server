@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"math/rand"
 
 	"go.xoder.cn/shortener/internal/shared"
@@ -16,4 +17,9 @@ func GenerateCode(length int) string {
 		result[i] = charset[index]
 	}
 	return string(result)
+}
+
+// IntToString 将整数转换为字符串
+func IntToString(i int) string {
+	return fmt.Sprintf("%d", i)
 }

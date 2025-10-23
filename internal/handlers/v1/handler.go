@@ -8,11 +8,11 @@ import (
 
 type handler struct{}
 
-// JsonRespErr 返回错误响应
+// JsonRespErr 返回错误响应 (符合 OpenAPI ErrorResponse)
 func (t *handler) JsonRespErr(errCode int) types.ResErr {
 	return types.ResErr{
-		ErrCode: errCode,
-		ErrInfo: ecodes.GetErrCodeMessage(errCode),
+		ErrorCode:    utils.IntToString(errCode),
+		ErrorMessage: ecodes.GetErrCodeMessage(errCode),
 	}
 }
 

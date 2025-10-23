@@ -20,7 +20,28 @@ tags:
     description: 历史记录
   - name: account
     description: 账号
+  - name: health
+    description: 健康检查
 paths:
+  /ping:
+    get:
+      tags:
+        - health
+      summary: "健康检查"
+      description: "检查服务是否正常运行"
+      operationId: "ping"
+      responses:
+        "200":
+          description: "服务正常"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "pong"
+
   /api/account/login:
     post:
       tags:
@@ -182,6 +203,19 @@ paths:
               - 0
               - 1
               - 2
+        - name: short_code
+          in: query
+          description: "短码搜索"
+          required: false
+          schema:
+            type: string
+            maxLength: 16
+        - name: original_url
+          in: query
+          description: "原始URL搜索（模糊匹配）"
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: "操作成功"
@@ -390,6 +424,19 @@ paths:
             enum:
               - asc
               - desc
+        - name: short_code
+          in: query
+          description: "短码搜索"
+          required: false
+          schema:
+            type: string
+            maxLength: 16
+        - name: ip_address
+          in: query
+          description: "IP地址搜索"
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: "操作成功"

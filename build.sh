@@ -5,7 +5,7 @@
 
 set -e
 
-PROJECT_NAME="shortener"
+PROJECT_NAME="shortener-server"
 CLI_NAME="shortener"
 DIST_DIR="dist"
 

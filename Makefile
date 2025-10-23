@@ -212,11 +212,11 @@ clean:
 # Docker operations
 .PHONY: docker-start
 docker-start:
-	@docker compose --profile valkey -f deploy/docker/compose.yml up -d
+	@docker compose --profile valkey -f docker/compose.yml up -d
 
 .PHONY: docker-stop
 docker-stop:
-	@docker compose --profile valkey -f deploy/docker/compose.yml down
+	@docker compose --profile valkey -f docker/compose.yml down
 
 # Testing
 .PHONY: test

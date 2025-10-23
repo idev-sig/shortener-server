@@ -46,7 +46,7 @@ func (t *ShortenLogic) ShortenAdd(code string, originalURL string, description s
 	newURL := model.Url{
 		ShortCode:   code,
 		OriginalURL: originalURL,
-		Description:    description,
+		Description: description,
 		Status:      0,
 		CreatedAt:   nowTime,
 		UpdatedAt:   nowTime,
@@ -206,8 +206,8 @@ func (t *ShortenLogic) ShortenAll(reqQuery types.ReqQueryShorten) (int, []types.
 	query := t.db.Model(&model.Url{}).
 		Order(fmt.Sprintf("%s %s", reqQuery.SortBy, reqQuery.Order))
 
-	if reqQuery.Code != "" {
-		query = query.Where("short_code = ?", reqQuery.Code)
+	if reqQuery.ShortCode != "" {
+		query = query.Where("short_code = ?", reqQuery.ShortCode)
 	}
 
 	if reqQuery.OriginalURL != "" {
@@ -229,8 +229,8 @@ func (t *ShortenLogic) ShortenAll(reqQuery types.ReqQueryShorten) (int, []types.
 
 	// 分页查询
 	data := make([]model.Url, 0)
-	resDB := query.Offset(int((reqQuery.Page - 1) * reqQuery.PageSize)).
-		Limit(int(reqQuery.PageSize)).
+	resDB := query.Offset(int((reqQuery.Page - 1) * reqQuery.PerPage)).
+		Limit(int(reqQuery.PerPage)).
 		Find(&data)
 	if resDB.Error != nil {
 		return ecodes.ErrCodeDatabaseError, results, pageInfo
@@ -238,11 +238,11 @@ func (t *ShortenLogic) ShortenAll(reqQuery types.ReqQueryShorten) (int, []types.
 
 	// 页码信息
 	pageInfo.Page = reqQuery.Page
-	pageInfo.PageSize = reqQuery.PageSize
-	pageInfo.CurrentCount = resDB.RowsAffected
-	pageInfo.TotalItems = total
-	pageInfo.TotalPages = total / int64(reqQuery.PageSize)
-	if total%int64(reqQuery.PageSize) != 0 {
+	pageInfo.PerPage = reqQuery.PerPage
+	pageInfo.Count = resDB.RowsAffected
+	pageInfo.Total = total
+	pageInfo.TotalPages = total / int64(reqQuery.PerPage)
+	if total%int64(reqQuery.PerPage) != 0 {
 		pageInfo.TotalPages++
 	}
 

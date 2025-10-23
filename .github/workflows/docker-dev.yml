@@ -5,7 +5,7 @@ on:
     branches:
       - dev*
     paths:
-      - "deploy/docker/Dockerfile"
+      - "docker/Dockerfile"
       - ".github/workflows/docker-dev.yml"
       - "internal/**"
       - "go.mod"
@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./deploy/docker/Dockerfile
+          file: ./docker/Dockerfile
           platforms: linux/${{ matrix.arch }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.GHCR_SLUG }}:${{ matrix.tag }}

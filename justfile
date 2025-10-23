@@ -1,7 +1,7 @@
 # Justfile for shortener project - Multi-architecture builds
 
 # Project configuration
-project_name := `basename $(pwd)`
+project_name := "shortener-server"
 cli_name := "shortener"
 dist_dir := "dist"
 
@@ -173,10 +173,10 @@ clean:
 
 # Docker operations
 docker-start:
-    @docker compose --profile valkey -f deploy/docker/compose.yml up -d
+    @docker compose --profile valkey -f docker/compose.yml up -d
 
 docker-stop:
-    @docker compose --profile valkey -f deploy/docker/compose.yml down
+    @docker compose --profile valkey -f docker/compose.yml down
 
 # Testing
 [group('test')]

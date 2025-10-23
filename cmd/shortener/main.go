@@ -43,7 +43,7 @@ const (
 	configName = "config"
 	configType = "toml"
 	cfgDirName = "shortener"
-	version    = "0.2.2"
+	version    = "0.3.0"
 )
 
 var (
@@ -243,10 +243,10 @@ func newShortenCreateCmd() *cobra.Command {
 			}
 
 			if res.StatusCode() != http.StatusCreated {
-				return fmt.Errorf("failed to create short URL: \n  status code: %d \n      errcode: %d \n      errinfo: %s",
+				return fmt.Errorf("failed to create short URL: \n  status code: %d \n  error_code: %s \n  error_message: %s",
 					res.StatusCode(),
-					resErr.ErrCode,
-					resErr.ErrInfo)
+					resErr.ErrorCode,
+					resErr.ErrorMessage)
 			}
 
 			if !isURL(response.OriginalURL) {
@@ -299,10 +299,10 @@ func newShortenDeleteCmd() *cobra.Command {
 			}
 
 			if res.StatusCode() != 204 {
-				return fmt.Errorf("failed to delete short URL: \n  status code: %d \n      errcode: %d \n      errinfo: %s",
+				return fmt.Errorf("failed to delete short URL: \n  status code: %d \n  error_code: %s \n  error_message: %s",
 					res.StatusCode(),
-					resErr.ErrCode,
-					resErr.ErrInfo)
+					resErr.ErrorCode,
+					resErr.ErrorMessage)
 			}
 
 			fmt.Printf("Deleted short Code: %s\n", code)
@@ -361,10 +361,10 @@ func newShortenUpdateCmd() *cobra.Command {
 			}
 
 			if res.StatusCode() != http.StatusOK {
-				return fmt.Errorf("failed to update short URL: \n  status code: %d \n      errcode: %d \n      errinfo: %s",
+				return fmt.Errorf("failed to update short URL: \n  status code: %d \n  error_code: %s \n  error_message: %s",
 					res.StatusCode(),
-					resErr.ErrCode,
-					resErr.ErrInfo)
+					resErr.ErrorCode,
+					resErr.ErrorMessage)
 			}
 
 			if !isURL(response.OriginalURL) {
@@ -419,10 +419,10 @@ func newShortenGetCmd() *cobra.Command {
 			}
 
 			if res.StatusCode() != http.StatusOK {
-				return fmt.Errorf("failed to get short URL: \n  status code: %d \n      errcode: %d \n      errinfo: %s",
+				return fmt.Errorf("failed to get short URL: \n  status code: %d \n  error_code: %s \n  error_message: %s",
 					res.StatusCode(),
-					resErr.ErrCode,
-					resErr.ErrInfo)
+					resErr.ErrorCode,
+					resErr.ErrorMessage)
 			}
 
 			if !isURL(response.OriginalURL) {
@@ -443,7 +443,11 @@ func newShortenListCmd() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"l"},
 		Short:   "List all short links",
-		Example: `  shortener list`,
+		Example: `  shortener list
+  shortener list --page 2 --per-page 20
+  shortener list --short-code abc123
+  shortener list --original-url example.com
+  shortener list --all`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return checkConfig()
 		},
@@ -465,7 +469,7 @@ func newShortenListCmd() *cobra.Command {
 				for {
 					query := url.Values{}
 					query.Set("page", strconv.FormatInt(page, 10))
-					query.Set("page_size", strconv.FormatInt(pageSize, 10))
+					query.Set("per_page", strconv.FormatInt(pageSize, 10))
 					query.Set("sort_by", "created_at")
 					query.Set("order", "asc")
 
@@ -480,10 +484,10 @@ func newShortenListCmd() *cobra.Command {
 					}
 
 					if res.StatusCode() != http.StatusOK {
-						return fmt.Errorf("failed to list short URLs: \n  status code: %d \n      errcode: %d \n      errinfo: %s",
+						return fmt.Errorf("failed to list short URLs: \n  status code: %d \n  error_code: %s \n  error_message: %s",
 							res.StatusCode(),
-							resErr.ErrCode,
-							resErr.ErrInfo)
+							resErr.ErrorCode,
+							resErr.ErrorMessage)
 					}
 
 					// 合并数据
@@ -499,20 +503,20 @@ func newShortenListCmd() *cobra.Command {
 				// 替换response为完整数据
 				response.Data = allData
 				response.Meta.Page = 1
-				response.Meta.CurrentCount = int64(len(allData))
-				response.Meta.TotalItems = int64(len(allData))
+				response.Meta.Count = int64(len(allData))
+				response.Meta.Total = int64(len(allData))
 				response.Meta.TotalPages = 1
-				response.Meta.PageSize = int64(len(allData))
+				response.Meta.PerPage = int64(len(allData))
 			} else {
 				// 原有分页查询逻辑
 				page, _ := cmd.Flags().GetInt64("page")
-				pageSize, _ := cmd.Flags().GetInt64("psize")
-				sortBy, _ := cmd.Flags().GetString("sort")
+				pageSize, _ := cmd.Flags().GetInt64("per-page")
+				sortBy, _ := cmd.Flags().GetString("sort-by")
 				order, _ := cmd.Flags().GetString("order")
 
 				// 搜索
-				code, _ := cmd.Flags().GetString("code")
-				originalURL, _ := cmd.Flags().GetString("original_url")
+				code, _ := cmd.Flags().GetString("short-code")
+				originalURL, _ := cmd.Flags().GetString("original-url")
 
 				// 设置默认值
 				if page == 0 {
@@ -530,12 +534,12 @@ func newShortenListCmd() *cobra.Command {
 
 				query := url.Values{}
 				query.Set("page", strconv.FormatInt(page, 10))
-				query.Set("page_size", strconv.FormatInt(pageSize, 10))
+				query.Set("per_page", strconv.FormatInt(pageSize, 10))
 				query.Set("sort_by", sortBy)
 				query.Set("order", order)
 
 				if code != "" {
-					query.Set("code", code)
+					query.Set("short_code", code)
 				}
 				if originalURL != "" {
 					query.Set("original_url", originalURL)
@@ -552,10 +556,10 @@ func newShortenListCmd() *cobra.Command {
 				}
 
 				if res.StatusCode() != http.StatusOK {
-					return fmt.Errorf("failed to list short URLs: \n  status code: %d \n      errcode: %d \n      errinfo: %s",
+					return fmt.Errorf("failed to list short URLs: \n  status code: %d \n  error_code: %s \n  error_message: %s",
 						res.StatusCode(),
-						resErr.ErrCode,
-						resErr.ErrInfo)
+						resErr.ErrorCode,
+						resErr.ErrorMessage)
 				}
 			}
 
@@ -575,12 +579,12 @@ func newShortenListCmd() *cobra.Command {
 				fmt.Println("--------------------------------")
 			}
 
-			fmt.Printf("  Total Items: %d\n", response.Meta.TotalItems)
+			fmt.Printf("Total Records: %d\n", response.Meta.Total)
 			if !isAll {
 				fmt.Printf("  Total Pages: %d\n", response.Meta.TotalPages)
-				fmt.Printf("    Page Size: %d\n", response.Meta.PageSize)
-				fmt.Printf(" Current Page: %d\n", response.Meta.Page)
-				fmt.Printf("Current Count: %d\n", response.Meta.CurrentCount)
+				fmt.Printf("     Per Page: %d\n", response.Meta.PerPage)
+				fmt.Printf("         Page: %d\n", response.Meta.Page)
+				fmt.Printf("Items on Page: %d\n", response.Meta.Count)
 			}
 
 			return nil
@@ -590,12 +594,12 @@ func newShortenListCmd() *cobra.Command {
 	cmd.Flags().BoolP("all", "a", false, "List all short links")
 
 	cmd.Flags().Int64P("page", "p", 1, "Page number")
-	cmd.Flags().Int64P("psize", "z", 10, "Page size")
-	cmd.Flags().StringP("sort", "s", "created_at", "Sort by field")
-	cmd.Flags().StringP("order", "o", "asc", "Sort order")
+	cmd.Flags().Int64P("per-page", "z", 10, "Items per page")
+	cmd.Flags().StringP("sort-by", "s", "created_at", "Sort by field (id, short_code, created_at, updated_at)")
+	cmd.Flags().StringP("order", "o", "asc", "Sort order (asc, desc)")
 
-	cmd.Flags().StringP("code", "c", "", "Short code")
-	cmd.Flags().StringP("original_url", "r", "", "Original URL")
+	cmd.Flags().StringP("short-code", "c", "", "Filter by short code")
+	cmd.Flags().StringP("original-url", "r", "", "Filter by original URL (fuzzy match)")
 
 	return cmd
 }

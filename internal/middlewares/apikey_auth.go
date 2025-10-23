@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,8 +18,8 @@ func ApiKeyAuth() gin.HandlerFunc {
 		if shared.GlobalAPIKey != "" && apiKey != shared.GlobalAPIKey {
 			errCode := ecodes.ErrCodeUnauthorized
 			c.JSON(http.StatusUnauthorized, types.ResErr{
-				ErrCode: errCode,
-				ErrInfo: ecodes.GetErrCodeMessage(errCode),
+				ErrorCode:    fmt.Sprintf("%d", errCode),
+				ErrorMessage: ecodes.GetErrCodeMessage(errCode),
 			})
 			c.Abort()
 			return

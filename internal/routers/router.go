@@ -33,15 +33,15 @@ func NewRouter() *gin.Engine {
 	shortener := handlers.Handle.ShortenHandler
 	history := handlers.Handle.HistoryHandler
 
-	// apiV1 := g.Group("/api/v1")
-	apiV1 := g.Group("/api")
-
 	// PING
-	apiV1.GET("/ping", func(c *gin.Context) {
+	g.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
+
+	// apiV1 := g.Group("/api/v1")
+	apiV1 := g.Group("/api")
 
 	apiV1.POST("/account/login", account.Login)
 	apiV1.Use(authMiddleware())

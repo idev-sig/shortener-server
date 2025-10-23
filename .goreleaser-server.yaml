@@ -3,7 +3,7 @@
 
 version: 2
 
-project_name: shortener
+project_name: shortener-server
 
 git:
   tag_sort: -version:refname

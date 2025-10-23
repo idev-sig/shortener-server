@@ -26,12 +26,12 @@ COPY . .
 # EOF
 RUN <<EOF
 mkdir -p /build/public/
-cp config/config.toml /build/public/
+cp config.toml /build/public/
 
 # 构建
 go mod tidy
 go generate ./...
-CGO_ENABLED=0 GOFLAGS="-trimpath" go build -ldflags "-s -w" -o /build/public/shortener
+CGO_ENABLED=0 GOFLAGS="-trimpath" go build -ldflags "-s -w" -o /build/public/shortener-server
 EOF
 
 FROM scratch AS prod
@@ -39,9 +39,9 @@ FROM scratch AS prod
 
 WORKDIR /app
 
-COPY --from=builder /build/public/shortener /bin/shortener
+COPY --from=builder /build/public/shortener-server /bin/shortener-server
 COPY --from=builder /build/public/config.toml config.toml
 # COPY --from=builder /build/public/data data
 EXPOSE 8080
 
-ENTRYPOINT ["shortener"]
+ENTRYPOINT ["shortener-server"]

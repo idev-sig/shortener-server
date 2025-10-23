@@ -108,14 +108,14 @@ build-platform GOOS GOARCH:
         server_output="${server_output}.exe"
     fi
     GOOS={{GOOS}} GOARCH={{GOARCH}} go build -ldflags "{{ldflags}}" -o "$server_output" ./main.go
-    
+
     # Build CLI
     cli_output="{{dist_dir}}/{{cli_name}}-{{GOOS}}-{{GOARCH}}"
     if [ "{{GOOS}}" = "windows" ]; then
         cli_output="${cli_output}.exe"
     fi
     GOOS={{GOOS}} GOARCH={{GOARCH}} go build -ldflags "{{ldflags}}" -o "$cli_output" ./cmd/shortener/main.go
-    
+
     echo "✓ Built server: $server_output"
     echo "✓ Built CLI: $cli_output"
 
@@ -135,11 +135,11 @@ package-all: build-all
                 platform=$(echo "$file" | sed 's/{{cli_name}}-//' | sed 's/\.exe$//')
                 name="{{cli_name}}-${platform}"
             fi
-            
+
             # Create temp directory
             mkdir -p "temp/$name"
             cp "$file" "temp/$name/"
-            
+
             # Copy related files
             if [[ "$file" == *"-server-"* ]]; then
                 cp ../LICENSE "temp/$name/" 2>/dev/null || true
@@ -149,14 +149,14 @@ package-all: build-all
                 cp ../LICENSE "temp/$name/" 2>/dev/null || true
                 cp ../cmd/shortener/README.md "temp/$name/" 2>/dev/null || true
             fi
-            
+
             # Package
             if [[ "$platform" == *"windows"* ]]; then
                 (cd temp && zip -r "../packages/${name}.zip" "$name/")
             else
                 tar -czf "packages/${name}.tar.gz" -C temp "$name"
             fi
-            
+
             echo "✓ Packaged $name"
         fi
     done
@@ -172,9 +172,11 @@ clean:
     @echo "Cleaned up successfully"
 
 # Docker operations
+[group('docker')]
 docker-start:
     @docker compose --profile valkey -f docker/compose.yml up -d
 
+[group('docker')]
 docker-stop:
     @docker compose --profile valkey -f docker/compose.yml down
 

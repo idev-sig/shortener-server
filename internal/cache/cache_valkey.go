@@ -27,10 +27,7 @@ func NewValkeyCache(cfg *types.CfgCache, valkeyCfg *types.CfgCacheValkey) (*Valk
 		Password:    valkeyCfg.Password,
 		SelectDB:    valkeyCfg.DB,
 	})
-	if err != nil {
-		return nil, err
-	}
-	return &ValkeyCache{config: cfg, clientPoint: &client, client: client}, nil
+	return &ValkeyCache{config: cfg, clientPoint: &client, client: client}, err
 }
 
 // Ping 检查缓存连接

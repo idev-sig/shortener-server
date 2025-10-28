@@ -19,10 +19,12 @@ type RedisCache struct {
 
 // NewRedisCache 创建Redis缓存
 func NewRedisCache(cfg *types.CfgCache, redisCfg *types.CfgCacheRedis) (*RedisCache, error) {
+	address := redisCfg.Host + ":" + strconv.Itoa(redisCfg.Port)
 	client := redis.NewClient(&redis.Options{
-		Addr:     redisCfg.Host + ":" + strconv.Itoa(redisCfg.Port),
-		Password: redisCfg.Password,
-		DB:       redisCfg.DB,
+		Addr:            address,
+		Password:        redisCfg.Password,
+		DB:              redisCfg.DB,
+		DisableIdentity: true, // Disable CLIENT SETINFO to avoid warnings on older Redis versions
 	})
 	return &RedisCache{config: cfg, client: client}, client.Ping(context.Background()).Err()
 }

@@ -33,7 +33,7 @@ func NewHistoryLogic() *HistoryLogic {
 
 // HistoryAdd 添加历史记录
 func (t *HistoryLogic) HistoryAdd(params types.HistoryParams) error {
-	nowTime := time.Now().Local()
+	nowTime := model.RFC3339Time{Time: time.Now().UTC()}
 
 	// 解析用户代理
 	uaParser := uaparser.NewFromSaved()
@@ -158,8 +158,8 @@ func (t *HistoryLogic) HistoryAll(reqQuery types.ReqQueryHistory) (int, []types.
 			DeviceType: item.DeviceType,
 			OS:         item.OS,
 			Browser:    item.Browser,
-			AccessedAt: utils.TimeToStr(item.AccessedAt),
-			CreatedAt:  utils.TimeToStr(item.CreatedAt),
+			AccessedAt: utils.TimeToStr(item.AccessedAt.Time),
+			CreatedAt:  utils.TimeToStr(item.CreatedAt.Time),
 		})
 	}
 

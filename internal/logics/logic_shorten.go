@@ -42,7 +42,7 @@ func (t *ShortenLogic) ShortenAdd(code string, originalURL string, description s
 	}
 
 	// 2. 创建新记录
-	nowTime := time.Now().Local()
+	nowTime := model.RFC3339Time{Time: time.Now().UTC()}
 	newURL := model.Url{
 		ShortCode:   code,
 		OriginalURL: originalURL,
@@ -69,8 +69,8 @@ func (t *ShortenLogic) ShortenAdd(code string, originalURL string, description s
 		OriginalURL: newURL.OriginalURL,
 		Description: newURL.Description,
 		Status:      newURL.Status,
-		CreatedAt:   utils.TimeToStr(nowTime),
-		UpdatedAt:   utils.TimeToStr(nowTime),
+		CreatedAt:   utils.TimeToStr(nowTime.Time),
+		UpdatedAt:   utils.TimeToStr(nowTime.Time),
 	}
 
 	return ecodes.ErrCodeSuccess, result
@@ -122,7 +122,6 @@ func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, descriptio
 
 	// 准备更新字段
 	updates := make(map[string]any)
-	updates["updated_at"] = time.Now().Unix()
 
 	if originalURL != "" {
 		updates["original_url"] = originalURL
@@ -131,7 +130,7 @@ func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, descriptio
 		updates["description"] = description
 	}
 
-	nowTime := time.Now().Local()
+	nowTime := model.RFC3339Time{Time: time.Now().UTC()}
 	updates["updated_at"] = nowTime
 
 	if err := t.db.Model(&existingURL).Updates(updates).Error; err != nil {
@@ -149,8 +148,8 @@ func (t *ShortenLogic) ShortenUpdate(code string, originalURL string, descriptio
 		OriginalURL: existingURL.OriginalURL,
 		Description: existingURL.Description,
 		Status:      existingURL.Status,
-		UpdatedAt:   utils.TimeToStr(nowTime),
-		CreatedAt:   utils.TimeToStr(existingURL.CreatedAt),
+		UpdatedAt:   utils.TimeToStr(nowTime.Time),
+		CreatedAt:   utils.TimeToStr(existingURL.CreatedAt.Time),
 	}
 
 	return ecodes.ErrCodeSuccess, result
@@ -190,8 +189,8 @@ func (t *ShortenLogic) ShortenFind(code string) (int, types.ResShorten) {
 		OriginalURL: data.OriginalURL,
 		Description: data.Description,
 		Status:      data.Status,
-		CreatedAt:   utils.TimeToStr(data.CreatedAt),
-		UpdatedAt:   utils.TimeToStr(data.UpdatedAt),
+		CreatedAt:   utils.TimeToStr(data.CreatedAt.Time),
+		UpdatedAt:   utils.TimeToStr(data.UpdatedAt.Time),
 	}
 
 	return ecodes.ErrCodeSuccess, result
@@ -254,8 +253,8 @@ func (t *ShortenLogic) ShortenAll(reqQuery types.ReqQueryShorten) (int, []types.
 			OriginalURL: item.OriginalURL,
 			Description: item.Description,
 			Status:      item.Status,
-			CreatedAt:   utils.TimeToStr(item.CreatedAt),
-			UpdatedAt:   utils.TimeToStr(item.UpdatedAt),
+			CreatedAt:   utils.TimeToStr(item.CreatedAt.Time),
+			UpdatedAt:   utils.TimeToStr(item.UpdatedAt.Time),
 		})
 	}
 

@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
@@ -44,7 +45,9 @@ func initDB() {
 	// 	level = 1
 	// }
 	gormCfg := &gorm.Config{
-		Logger: gormLogger.Default.LogMode(gormLogger.LogLevel(level)),
+		Logger:      gormLogger.Default.LogMode(gormLogger.LogLevel(level)),
+		NowFunc:     func() time.Time { return time.Now().UTC() },
+		PrepareStmt: true,
 	}
 	shared.GlobalDB, err = gorm.Open(dialector, gormCfg)
 	if err != nil {
@@ -70,9 +73,10 @@ func connectSqlite() gorm.Dialector {
 	// dialector := sqlite.Open(dsn)
 
 	// 使用 modernc.org/sqlite 作为驱动
+	// 添加 _loc=UTC 参数确保时间以 UTC 格式存储
 	dialector := sqlite.Dialector{
 		DriverName: "sqlite",
-		DSN:        dsn, // 数据库文件
+		DSN:        dsn + "?_loc=UTC", // 数据库文件，使用 UTC 时区
 	}
 
 	return dialector
@@ -126,7 +130,7 @@ func connectMysql() gorm.Dialector {
 	parseTime := viper.GetBool("database.mysql.parse_time")
 	loc := viper.GetString("database.mysql.loc")
 	if loc == "" {
-		loc = "Local"
+		loc = "UTC"
 	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=%t&loc=%s",
 		viper.GetString("database.mysql.user"),

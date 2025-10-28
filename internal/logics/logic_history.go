@@ -45,7 +45,6 @@ func (t *HistoryLogic) HistoryAdd(params types.HistoryParams) error {
 	// 初始化地理位置信息
 	geoInfo := struct {
 		Country  string
-		Region   string
 		Province string
 		City     string
 		ISP      string
@@ -55,11 +54,18 @@ func (t *HistoryLogic) HistoryAdd(params types.HistoryParams) error {
 		if ipByte, err := t.geoip.IPStr2Byte(params.IPAddress); err == nil {
 			if ipInfo, err := t.geoip.Search(ipByte); err == nil {
 				ipData := t.geoip.Parse(ipInfo)
-				geoInfo.Country = ipData.Country
-				geoInfo.Region = ipData.Region
-				geoInfo.Province = ipData.Province
-				geoInfo.City = ipData.City
-				geoInfo.ISP = ipData.ISP
+				if ipData.City != "0" {
+					geoInfo.City = ipData.City
+				}
+				if ipData.Province != "0" {
+					geoInfo.Province = ipData.Province
+				}
+				if ipData.Country != "0" {
+					geoInfo.Country = ipData.Country
+				}
+				if ipData.ISP != "0" {
+					geoInfo.ISP = ipData.ISP
+				}
 			}
 		}
 	}
@@ -71,7 +77,6 @@ func (t *HistoryLogic) HistoryAdd(params types.HistoryParams) error {
 		UserAgent:  params.UserAgent,
 		Referer:    params.Referer,
 		Country:    geoInfo.Country,
-		Region:     geoInfo.Region,
 		Province:   geoInfo.Province,
 		City:       geoInfo.City,
 		ISP:        geoInfo.ISP,

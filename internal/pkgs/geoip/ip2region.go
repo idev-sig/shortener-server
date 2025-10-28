@@ -78,26 +78,22 @@ func (t *IP2Region) SearchByStr(ip string) (string, error) {
 // Parse 解析IP数据
 func (t *IP2Region) Parse(data string) *GeoIPData {
 	parts := strings.Split(data, "|")
-	var country, region, province, city, isp string
+	var country, province, city, isp string
 	if len(parts) > 0 {
 		country = parts[0]
 	}
 	if len(parts) > 1 {
-		region = parts[1]
+		province = parts[1]
 	}
 	if len(parts) > 2 {
-		province = parts[2]
+		city = parts[2]
 	}
 	if len(parts) > 3 {
-		city = parts[3]
-	}
-	if len(parts) > 4 {
-		isp = parts[4]
+		isp = parts[3]
 	}
 
 	return &GeoIPData{
 		Country:  country,
-		Region:   region,
 		Province: province,
 		City:     city,
 		ISP:      isp,

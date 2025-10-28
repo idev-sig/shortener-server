@@ -18,7 +18,6 @@ type GeoIP interface {
 // GeoIPData 地理IP数据
 type GeoIPData struct {
 	Country  string
-	Region   string
 	Province string
 	City     string
 	ISP      string

@@ -231,7 +231,7 @@ test-ci:
 .PHONY: fmt
 fmt:
 	@gofumpt -w ./
-	@goimports -w -local go.bdev.cn/shortener ./
+	@goimports -w -local go.xoder.cn/shortener-server ./
 
 .PHONY: lint
 lint:

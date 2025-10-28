@@ -46,19 +46,19 @@ func (t *RFC3339Time) Scan(value any) error {
 
 // Value 实现 driver.Valuer 接口，写入数据库时使用 RFC3339 格式
 func (t RFC3339Time) Value() (driver.Value, error) {
-	if t.Time.IsZero() {
+	if t.IsZero() {
 		return nil, nil
 	}
 	// 返回 RFC3339 格式的字符串
-	return t.Time.UTC().Format(time.RFC3339), nil
+	return t.UTC().Format(time.RFC3339), nil
 }
 
 // MarshalJSON 实现 JSON 序列化
 func (t RFC3339Time) MarshalJSON() ([]byte, error) {
-	if t.Time.IsZero() {
+	if t.IsZero() {
 		return []byte("null"), nil
 	}
-	return []byte(`"` + t.Time.UTC().Format(time.RFC3339) + `"`), nil
+	return []byte(`"` + t.UTC().Format(time.RFC3339) + `"`), nil
 }
 
 // UnmarshalJSON 实现 JSON 反序列化

@@ -4,8 +4,8 @@ go 1.25.3
 
 require (
 	github.com/gin-gonic/gin v1.11.0
-	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20251023062652-029a5578aa01
-	github.com/redis/go-redis/v9 v9.14.1
+	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20251027134825-bbf5df560120
+	github.com/redis/go-redis/v9 v9.16.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.21.0
 	github.com/ua-parser/uap-go v0.0.0-20250917011043-9c86a9b0f8f0
@@ -75,7 +75,7 @@ require (
 	github.com/ugorji/go/codec v1.3.0 // indirect
 	golang.org/x/arch v0.22.0 // indirect
 	golang.org/x/crypto v0.43.0 // indirect
-	golang.org/x/exp v0.0.0-20251017212417-90e834f514db // indirect
+	golang.org/x/exp v0.0.0-20251023183803-a4bb9ffd2546 // indirect
 	golang.org/x/net v0.46.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
 	golang.org/x/sys v0.37.0 // indirect
